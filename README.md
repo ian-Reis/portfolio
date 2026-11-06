@@ -57,8 +57,32 @@ Tudo nasce de onde a pessoa agiu, num gesto só, com a mesma curva:
   (View Transitions entre páginas).
 - **Acabamentos:** ícone da aba acompanha o tema; carregamento com brilho suave no lugar de espaço vazio.
 
+### Efeitos (`assets/js/fx/`, sem bibliotecas)
+
+Cada efeito é um módulo ES carregado sob demanda; se um falhar ou o navegador não tiver suporte, a página
+continua igual sem ele.
+
+- **Tinta no hero** (`fluid.js`, WebGL2, desktop): simulação de fluido atrás do título. As letras são
+  sólidas, então a tinta contorna o texto; o mouse mexe, correntes lentas mantêm vivo, e a troca de tema
+  derrama um anel de tinta a partir do botão. Pausa fora da tela, com a aba oculta e na visão geral.
+- **Lanterna de tema** (em `site.js`): segure o botão de tema e arraste. Um círculo mostra a página no outro
+  tema; solte longe do botão para o tema se espalhar a partir do círculo, ou solte nele para só espiar.
+- **Título que derrete** (`morph.js`, WebGL2): na troca de idioma, os dois títulos viram campos de distância
+  (transformada de distância exata, em JS) e um se funde no outro, com algumas colunas escorrendo.
+  No celular só carrega quando o botão de idioma é tocado.
+- **Algoritmos vivos** (`algos.js`, canvas 2D): cada item de "Algoritmos e estruturas de dados" do índice
+  tem um ▶ que roda uma demonstração passo a passo, com dados reais quando existem: BFS/DFS no próprio mapa
+  de skills, quicksort nas suas contribuições, busca binária nos nomes do índice. No celular abre como folha
+  inferior.
+- **Cidade das contribuições** (`city.js`, WebGL2, desktop): o heatmap vira uma cidade 3D, um prédio por
+  dia (botão Grade / Cidade no cabeçalho do heatmap). Dia no tema claro, noite no escuro, com um
+  pôr do sol curto na troca e janelas acesas conforme o trabalho do dia. Arraste para girar.
+- **Visão geral** (`overview.js`, desktop): `Shift+O`, o menu de comandos ou o botão no rodapé. A câmera
+  se afasta e cada seção vira uma prancheta, ligadas pelo mesmo fio da página; clique (ou setas + Enter)
+  para voltar a uma delas com zoom. `Esc` volta para onde estava.
+
 Módulos não essenciais iniciam quando o navegador fica ocioso, cada um em sua tarefa, para não bloquear a
-primeira pintura.
+primeira pintura; os efeitos de seções mais abaixo só carregam quando elas se aproximam da tela.
 
 Tudo respeita `prefers-reduced-motion`: sem animações de entrada nem pontos em movimento; as
 interações continuam. Sem JavaScript, a página aparece completa em inglês.
@@ -71,6 +95,7 @@ assets/css/fonts.css      → @font-face das fontes hospedadas aqui
 assets/css/site.css       → tokens dos dois temas, layout, movimento, impressão
 assets/js/i18n.js         → traduções PT, textos do painel e dos comandos
 assets/js/site.js         → todo o comportamento, em módulos isolados
+assets/js/fx/             → efeitos opcionais (tinta, título, algoritmos, cidade, visão geral)
 assets/fonts/             → Geist e Geist Mono (variáveis, subset latin, licença OFL)
 assets/images/games/      → capas dos jogos (do itch.io)
 assets/images/og.png      → imagem de compartilhamento 1200×630
@@ -100,10 +125,11 @@ disso. O texto do painel fica em `skills` (EN e PT) e os links de trabalho públ
 **Índice completo.** Em `index.html`, dentro de `<div class="ix" id="index">`. Cada habilidade é um
 `<li class="ix__item">` com `ix__name` e, opcionalmente, `ix__detail`. Para marcar como estudo, use
 `data-status="study"` e acrescente `<span class="ix__tag" data-i18n="ix.studying">studying</span>`.
-Contagens e filtro são automáticos.
+Contagens e filtro são automáticos. Para ligar uma demonstração a um item, use `data-algo` com uma das
+chaves de `DEMOS` em `assets/js/fx/algos.js`.
 
-**Work.** `<li class="repo" data-repo="nome-do-repo">` em `index.html`. A data, a barra de linguagens,
-a linha do tempo e a prévia de commit vêm da API pública do GitHub, com cache de 6 horas no navegador.
+**Work.** `<li class="repo" data-repo="nome-do-repo">` em `index.html`. A data, a barra de linguagens
+e a prévia de commit vêm da API pública do GitHub, com cache de 6 horas no navegador.
 Se a API falhar, a lista continua completa.
 
 ## Publicar
@@ -123,4 +149,5 @@ Já está no GitHub Pages: basta fazer push para `main` do repositório `ian-Rei
 
 Lighthouse 12, servidor local: desktop 100 / 100 / 100 / 100; mobile 92 / 100 / 100 / 100
 (performance / acessibilidade / boas práticas / SEO). A nota de performance no mobile varia alguns pontos
-com a carga da máquina: nas mesmas condições, a versão anterior às animações mediu o mesmo 92.
+com a carga da máquina: nas mesmas condições, a versão anterior às animações mediu o mesmo 92. Com os
+efeitos de `fx/`: desktop 100 / 100 / 100 / 100; mobile 92 / 100 / 100 / 100 (duas medições seguidas).
