@@ -1,6 +1,6 @@
 /* Ian Reis — portfolio. Plain JavaScript, no dependencies.
    Modules: theme, language, header (progress + nav), hero (type + light), reveals, skill map
-   (graph, scroll build, tracing, panel, packets), GitHub data (dates, languages, timeline, previews),
+   (graph, scroll build, tracing, panel, packets), GitHub data (dates, languages, previews),
    games previews, email copy, command menu, inspect mode, print.
    Each module is isolated: if one fails, the rest of the page keeps working. */
 (() => {
@@ -738,7 +738,7 @@
     };
   });
 
-  /* ── GitHub data (one cached request feeds dates, languages, timeline and previews) ── */
+  /* ── GitHub data (one cached request feeds dates, languages and previews) ── */
   const GH = 'https://api.github.com';
   const cached = (key, ttl, loader) => {
     try {
@@ -860,7 +860,7 @@
     api.repoByName = (name) => (repos ? repos.find((r) => r.name.toLowerCase() === name.toLowerCase()) : null);
   });
 
-  /* ── Floating preview: last commit on repositories, cover on games, name on timeline dots ── */
+  /* ── Floating preview: last commit on repositories, cover on games ── */
   later('peek', () => {
     const peek = $('#peek');
     if (!peek || !finePointer) return;
