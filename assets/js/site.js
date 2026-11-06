@@ -226,7 +226,7 @@
   safe('reveals', () => {
     if (!('IntersectionObserver' in window)) return;
     const heads = $$('.sec__head');
-    const items = [...$$('.repo'), ...$$('.insight'), ...$$('.ix__group'), $('.contact')].filter(Boolean);
+    const items = [...$$('.repo'), ...$$('.insight'), ...$$('.ix__group'), $('.activity'), $('.contact')].filter(Boolean);
     items.forEach((n) => n.classList.add('reveal'));
     $$('.repos').forEach((list) => $$('.repo', list).forEach((li, i) => li.style.setProperty('--i', String(i))));
     $$('.insight').forEach((f, i) => f.style.setProperty('--i', String(i)));
@@ -844,6 +844,124 @@
       tl.addEventListener('pointerout', (e) => { if (e.target.closest('.timeline__dot')) hide(); });
     }
     window.addEventListener('scroll', hide, { passive: true });
+    api.peek = { show, follow, hide };
+  });
+
+  /* ── Contribution heatmap (private repositories included; data file refreshed daily by an Action) ── */
+  safe('activity', () => {
+    const fig = $('#activity');
+    if (!fig || !('IntersectionObserver' in window)) return;
+    const grid = $('.hm__grid', fig);
+    const months = $('.hm__months', fig);
+    const totalEl = $('#act-total');
+    let data = null;
+    let shownWeeks = 0;
+
+    const loc = () => (I ? I.locale() : 'en-US');
+    const num = (n) => new Intl.NumberFormat(loc()).format(n);
+    const fill = (tpl, map) => tpl.replace(/\{(\w)\}/g, (_, k) => (map[k] !== undefined ? map[k] : ''));
+    const dayDate = (i) => { const d = new Date(`${data.start}T00:00:00Z`); d.setUTCDate(d.getUTCDate() + i); return d; };
+    const countLabel = (n) => (n === 0 ? t('act.none') : n === 1 ? t('act.one') : fill(t('act.many'), { n: num(n) }));
+
+    // quartiles of the active days, so one huge day does not wash out the rest
+    const thresholds = () => {
+      const nz = data.counts.filter((n) => n > 0).sort((a, b) => a - b);
+      const q = (p) => nz[Math.min(nz.length - 1, Math.floor(p * (nz.length - 1)))] || 1;
+      return [q(0.25), q(0.5), q(0.75)];
+    };
+    const level = (n, th) => (n === 0 ? 0 : n <= th[0] ? 1 : n <= th[1] ? 2 : n <= th[2] ? 3 : 4);
+
+    const render = () => {
+      if (!data) return;
+      const wanted = fig.clientWidth < 620 ? 26 : 53;
+      const lead = dayDate(0).getUTCDay(); // columns are weeks starting on Sunday, like GitHub
+      const slots = [...Array(lead).fill(-1), ...data.counts.map((_, i) => i)];
+      const totalWeeks = Math.ceil(slots.length / 7);
+      const first = Math.max(0, totalWeeks - wanted);
+      const weeks = totalWeeks - first;
+      const th = thresholds();
+      const monthFmt = new Intl.DateTimeFormat(loc(), { month: 'short', timeZone: 'UTC' });
+      const cells = [];
+      const labels = [];
+      for (let w = first; w < totalWeeks; w += 1) {
+        const col = w - first;
+        let firstDay = null;
+        for (let d = 0; d < 7; d += 1) {
+          const idx = slots[w * 7 + d];
+          const c = el('i', 'hm__c');
+          c.style.setProperty('--c', String(col));
+          if (idx === undefined || idx < 0) c.dataset.l = 'x';
+          else {
+            c.dataset.l = String(level(data.counts[idx], th));
+            c.dataset.i = String(idx);
+            if (firstDay === null) firstDay = dayDate(idx);
+          }
+          cells.push(c);
+        }
+        // label a month in the column where it begins
+        if (firstDay && firstDay.getUTCDate() <= 7 && col < weeks - 1) {
+          const s = el('span', '', monthFmt.format(firstDay));
+          s.style.gridColumn = `${col + 1} / span 3`;
+          labels.push(s);
+        }
+      }
+      grid.style.setProperty('--weeks', String(weeks));
+      months.style.setProperty('--weeks', String(weeks));
+      grid.replaceChildren(...cells);
+      months.replaceChildren(...labels);
+      shownWeeks = wanted;
+
+      const byMonth = new Map();
+      data.counts.forEach((n, i) => { const k = dayDate(i).toISOString().slice(0, 7); byMonth.set(k, (byMonth.get(k) || 0) + n); });
+      const [bestKey] = [...byMonth.entries()].sort((a, b) => b[1] - a[1])[0] || [];
+      const best = bestKey ? new Intl.DateTimeFormat(loc(), { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${bestKey}-01T00:00:00Z`)) : '';
+      totalEl.textContent = fill(t('act.total'), { n: num(data.total), d: num(data.activeDays) });
+      grid.setAttribute('aria-label', fill(t('act.aria'), { n: num(data.total), d: num(data.activeDays), m: best }));
+    };
+
+    const valid = (d) => d && typeof d.start === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d.start)
+      && Array.isArray(d.counts) && d.counts.length >= 300 && d.counts.length <= 400
+      && d.counts.every((n) => Number.isInteger(n) && n >= 0);
+
+    const io = new IntersectionObserver(([en]) => {
+      if (!en.isIntersecting) return;
+      io.disconnect();
+      fetch('assets/data/activity.json', { cache: 'no-cache' })
+        .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`activity ${r.status}`))))
+        .then((d) => {
+          if (!valid(d)) return;
+          data = {
+            start: d.start,
+            counts: d.counts,
+            total: d.counts.reduce((a, b) => a + b, 0),
+            activeDays: d.counts.filter((n) => n > 0).length,
+          };
+          fig.hidden = false; // visible first: render() measures the width to pick 26 or 53 weeks
+          render();
+          if (api.refreshScroll) requestAnimationFrame(api.refreshScroll);
+        })
+        .catch(() => { /* no data file: the heatmap simply stays hidden */ });
+    }, { rootMargin: '600px 0px' });
+    io.observe($('#work') || fig);
+
+    window.addEventListener('resize', () => {
+      if (data && (fig.clientWidth < 620 ? 26 : 53) !== shownWeeks) render();
+    });
+    langHooks.push(render);
+
+    // day details in the shared floating preview
+    if (finePointer) {
+      const dayFmt = () => new Intl.DateTimeFormat(loc(), { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+      grid.addEventListener('pointerover', (e) => {
+        const c = e.target.closest('.hm__c[data-i]');
+        if (!c || !api.peek) return;
+        const i = Number(c.dataset.i);
+        api.peek.follow(e);
+        api.peek.show([el('p', 'peek__label', dayFmt().format(dayDate(i))), el('p', 'peek__msg', countLabel(data.counts[i]))]);
+      });
+      grid.addEventListener('pointermove', (e) => { if (api.peek) api.peek.follow(e); });
+      grid.addEventListener('pointerleave', () => { if (api.peek) api.peek.hide(); });
+    }
   });
 
   /* ── Copy email ── */
