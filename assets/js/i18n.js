@@ -60,7 +60,10 @@ window.I18N = (() => {
     'work.title': 'Trabalho',
     'work.note': 'Repositórios públicos no <a href="https://github.com/ian-Reis?tab=repositories" target="_blank" rel="noopener">GitHub</a>.',
     'work.langs': 'Linguagens nos repositórios públicos',
-    'work.timeline': 'Último push de cada repositório',
+    'work.timeline': 'Último push de cada repositório público',
+    'act.label': 'Contribuições no último ano, incluindo repositórios privados',
+    'act.less': 'Menos',
+    'act.more': 'Mais',
     'work.all': 'Ver todos os repositórios no GitHub',
     'r.agentic': 'Um plugin para o Claude Code que monta um fluxo de trabalho multiagente baseado em arquivos. Um agente planeja, os outros executam a partir de uma fila e comprovam o trabalho com relatórios.',
     'r.iansec': 'Um cofre de senhas pessoal que roda offline no terminal. Sem servidor, sem nuvem.',
@@ -186,6 +189,8 @@ window.I18N = (() => {
       'cmd.github': 'GitHub profile', 'cmd.itch': 'itch.io page', 'cmd.mail': 'Write an email', 'cmd.empty': 'No matching command',
       'timeline.repo': 'repository', 'timeline.repos': 'repositories',
       'cmd.group.skills': 'Skill index', 'cmd.index': 'Full skill index',
+      'act.total': '{n} contributions on {d} days', 'act.one': '1 contribution', 'act.many': '{n} contributions', 'act.none': 'No contributions',
+      'act.aria': '{n} contributions in the last year, on {d} active days. Busiest month: {m}.',
     },
     pt: {
       'rel.fed': 'Recebe de', 'rel.feeds': 'Alimenta', 'rel.and': 'e',
@@ -201,6 +206,8 @@ window.I18N = (() => {
       'cmd.github': 'Perfil no GitHub', 'cmd.itch': 'Página no itch.io', 'cmd.mail': 'Escrever um e-mail', 'cmd.empty': 'Nenhum comando encontrado',
       'timeline.repo': 'repositório', 'timeline.repos': 'repositórios',
       'cmd.group.skills': 'Índice de habilidades', 'cmd.index': 'Índice completo de habilidades',
+      'act.total': '{n} contribuições em {d} dias', 'act.one': '1 contribuição', 'act.many': '{n} contribuições', 'act.none': 'Nenhuma contribuição',
+      'act.aria': '{n} contribuições no último ano, em {d} dias com atividade. Mês mais ativo: {m}.',
     },
   };
 
