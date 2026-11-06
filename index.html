@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ian Reis — Software Engineer</title>
-<meta name="description" content="Ian Reis is a software engineer who builds management systems, point-of-sale software, RESTful APIs, data analysis, BI and dashboards. Also makes games with Godot and Roblox.">
+<meta name="description" content="Ian Reis is a freelance software engineer: software architecture, RESTful APIs, management and point-of-sale systems, Python automation and data analysis. Also builds games with Godot and Roblox. Portuguese and English.">
+<meta name="keywords" content="software engineer, software architecture, RESTful APIs, FastAPI, Python, automation, N8N, CQRS, DDD, Clean Architecture, Godot 4, Roblox, Luau, multiplayer, freelancer">
 <meta name="theme-color" content="#F2F4F3">
 <meta name="color-scheme" content="light dark">
 <link rel="canonical" href="https://ian-reis.github.io/portfolio/">
@@ -26,6 +27,8 @@
   "jobTitle": "Software Engineer",
   "email": "mailto:erickian2007@gmail.com",
   "url": "https://ian-reis.github.io/portfolio/",
+  "knowsLanguage": ["pt-BR", "en"],
+  "knowsAbout": ["Software architecture", "RESTful APIs", "FastAPI", "Python", "Automation", "N8N", "Firebase", "CQRS", "Domain-Driven Design", "Clean Architecture", "Event-driven architecture", "Data structures and algorithms", "Management systems", "Point of sale", "Business intelligence", "Godot 4", "Roblox", "Luau", "C#", "Multiplayer netcode"],
   "sameAs": ["https://github.com/ian-Reis", "https://ian-reis.itch.io/"]
 }
 </script>
@@ -101,7 +104,7 @@
       </h1>
       <div class="hero__side">
         <p class="status"><span class="status__dot" aria-hidden="true"></span><span data-i18n="status">Open for commissions and services</span></p>
-        <p class="hero__lead" data-i18n="hero.lead">I'm Ian Reis. I build management systems, point-of-sale software and RESTful APIs, and turn their data into analysis, BI and dashboards. I also make games in Godot and Roblox.</p>
+        <p class="hero__lead" data-i18n="hero.lead">I'm Ian Reis, freelancing for about four years. I build systems from scratch: management and point-of-sale software, APIs, automations and the data analysis behind them. I also make games in Godot and Roblox, and I work in Portuguese and English.</p>
         <div class="hero__actions">
           <a class="btn btn--primary" href="https://github.com/ian-Reis" target="_blank" rel="noopener">
             <svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
@@ -163,12 +166,46 @@
           </div>
         </div>
 
+        <div class="map__row" data-row="auto">
+          <div class="map__labels">
+            <h3 class="map__label" data-i18n="map.auto">Automation and AI tooling</h3>
+          </div>
+          <div class="map__grid">
+            <ul class="col">
+              <li><button class="node" type="button" data-id="python" data-to="auto" data-stage="0" aria-pressed="false" aria-controls="panel">
+                <span class="node__name">Python</span>
+                <span class="node__desc" data-i18n="n.python.d">Automation and command-line tools</span>
+              </button></li>
+              <li><button class="node" type="button" data-id="n8n" data-to="auto" data-stage="0" aria-pressed="false" aria-controls="panel">
+                <span class="node__name">N8N</span>
+                <span class="node__desc" data-i18n="n.n8n.d">Workflows between services</span>
+              </button></li>
+              <li><button class="node" type="button" data-id="claude" data-to="auto" data-stage="0" aria-pressed="false" aria-controls="panel">
+                <span class="node__name">Claude Code</span>
+                <span class="node__desc" data-i18n="n.claude.d">Skills, plugins, prompts and MCP</span>
+              </button></li>
+            </ul>
+            <ul class="col">
+              <li><button class="node" type="button" data-id="auto" data-stage="1" aria-pressed="false" aria-controls="panel">
+                <span class="node__name" data-i18n="n.auto">Automation</span>
+                <span class="node__desc" data-i18n="n.auto.d">Repetitive work, done by software</span>
+              </button></li>
+            </ul>
+            <div class="col col--empty" aria-hidden="true"></div>
+            <div class="col col--empty" aria-hidden="true"></div>
+          </div>
+        </div>
+
         <div class="map__row map__row--games" data-row="games">
           <div class="map__labels">
             <h3 class="map__label" data-i18n="map.games">Games, on the side</h3>
           </div>
           <div class="map__grid">
             <ul class="col">
+              <li><button class="node" type="button" data-id="gdscript" data-to="godot" data-stage="0" aria-pressed="false" aria-controls="panel">
+                <span class="node__name">GDScript</span>
+                <span class="node__desc" data-i18n="n.gdscript.d">Godot's own language</span>
+              </button></li>
               <li><button class="node" type="button" data-id="csharp" data-to="godot" data-stage="0" aria-pressed="false" aria-controls="panel">
                 <span class="node__name">C#</span>
                 <span class="node__desc" data-i18n="n.csharp.d">Gameplay code and tools</span>
@@ -180,7 +217,7 @@
             </ul>
             <ul class="col">
               <li><button class="node" type="button" data-id="godot" data-to="game" data-stage="1" aria-pressed="false" aria-controls="panel">
-                <span class="node__name">Godot</span>
+                <span class="node__name">Godot 4</span>
                 <span class="node__desc" data-i18n="n.godot.d">Open-source game engine</span>
               </button></li>
               <li><button class="node" type="button" data-id="roblox" data-to="game" data-stage="1" aria-pressed="false" aria-controls="panel">
@@ -191,7 +228,7 @@
             <ul class="col">
               <li><button class="node" type="button" data-id="game" data-stage="2" aria-pressed="false" aria-controls="panel">
                 <span class="node__name" data-i18n="n.game">Game development</span>
-                <span class="node__desc" data-i18n="n.game.d">Prototypes, gameplay and tools</span>
+                <span class="node__desc" data-i18n="n.game.d">Custom systems, multiplayer, prototypes</span>
               </button></li>
             </ul>
             <div class="col col--empty" aria-hidden="true"></div>
@@ -222,6 +259,151 @@
             </div>
           </div>
         </section>
+      </div>
+
+      <!-- full index: every skill, grouped; studying marked as such -->
+      <div class="ix" id="index" data-c="SkillIndex">
+        <header class="ix__head">
+          <div>
+            <h3 class="ix__title" data-i18n="ix.title">Full index</h3>
+            <p class="ix__note" data-i18n="ix.note">Everything I work with, and what I'm studying now.</p>
+          </div>
+          <div class="ix__filter" role="group" aria-label="Filter the index" data-i18n-attr="aria-label:ix.filter" hidden>
+            <button type="button" class="ix__btn" data-filter="all" aria-pressed="true"><span data-i18n="ix.all">All</span><b></b></button>
+            <button type="button" class="ix__btn" data-filter="practice" aria-pressed="false"><span data-i18n="ix.practice">In practice</span><b></b></button>
+            <button type="button" class="ix__btn" data-filter="study" aria-pressed="false"><span data-i18n="ix.study">Studying</span><b></b></button>
+          </div>
+        </header>
+
+        <div class="ix__groups">
+          <section class="ix__group" aria-labelledby="ix-g-arch">
+            <h4 class="ix__gtitle" id="ix-g-arch"><span data-i18n="ix.g.arch">Software architecture</span><span class="ix__count"></span></h4>
+            <ul class="ix__list">
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.arch">Software architecture</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.scratch">Building systems from scratch</span></li>
+              <li class="ix__item"><span class="ix__name">Clean Architecture / Hexagonal</span></li>
+              <li class="ix__item"><span class="ix__name">Domain-Driven Design (DDD)</span></li>
+              <li class="ix__item"><span class="ix__name">CQRS</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.eda">Event-driven architecture</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.pubsub">Pub/Sub and message brokers</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.micro">Microservices vs. modular monolith</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.layers">Layered architecture, MVC, MVVM</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.di">Dependency injection / IoC</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.solid">SOLID principles</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.gof">GoF design patterns</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.components">Component-based design</span><span class="ix__detail" data-i18n="ix.components.d">decoupled with signals</span></li>
+            </ul>
+          </section>
+
+          <section class="ix__group" aria-labelledby="ix-g-back">
+            <h4 class="ix__gtitle" id="ix-g-back"><span data-i18n="ix.g.back">Back end and APIs</span><span class="ix__count"></span></h4>
+            <ul class="ix__list">
+              <li class="ix__item"><span class="ix__name" data-i18n="n.api">RESTful APIs</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name">FastAPI</span><span class="ix__detail" data-i18n="ix.fastapi.d">REST, best practices, traffic optimisation</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name">SQL</span><span class="ix__detail" data-i18n="ix.sql.d">alongside FastAPI</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.redis">Caching</span><span class="ix__detail">Redis</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.idem">Idempotency and retry</span></li>
+              <li class="ix__item"><span class="ix__name">Rate limiting</span></li>
+              <li class="ix__item"><span class="ix__name">API Gateway / BFF</span></li>
+              <li class="ix__item"><span class="ix__name">Firebase</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="n.mgmt">Management systems</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="n.pdv">Point of sale (PDV)</span></li>
+            </ul>
+          </section>
+
+          <section class="ix__group" aria-labelledby="ix-g-data">
+            <h4 class="ix__gtitle" id="ix-g-data"><span data-i18n="ix.g.data">Data and automation</span><span class="ix__count"></span></h4>
+            <ul class="ix__list">
+              <li class="ix__item"><span class="ix__name">Python</span><span class="ix__detail" data-i18n="ix.python.d">automation and command-line tools</span></li>
+              <li class="ix__item"><span class="ix__name">N8N</span><span class="ix__detail" data-i18n="ix.n8n.d">workflow automation</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.analysis">Data analysis</span><span class="ix__detail">Python</span></li>
+              <li class="ix__item"><span class="ix__name">Business intelligence</span></li>
+              <li class="ix__item"><span class="ix__name">Dashboards</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.tsundoku">Manga and light novel toolchain</span><span class="ix__detail">Tsundoku</span></li>
+            </ul>
+          </section>
+
+          <section class="ix__group" aria-labelledby="ix-g-algo">
+            <h4 class="ix__gtitle" id="ix-g-algo"><span data-i18n="ix.g.algo">Algorithms and data structures</span><span class="ix__count"></span></h4>
+            <ul class="ix__list">
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.queues">Queues, stacks, hash maps</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.linked">Linked lists</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.heap">Deque, priority queue, heap</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.trees">Binary trees, BST, AVL, red-black</span></li>
+              <li class="ix__item"><span class="ix__name">B-Trees</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.graphs">Graphs: BFS, DFS</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.bigo">Big-O and complexity analysis</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.sorting">Sorting algorithms</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.bsearch">Binary search</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.dp">Dynamic programming</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.recursion">Recursion and backtracking</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.concurrency">Concurrency</span><span class="ix__detail" data-i18n="ix.concurrency.d">threads, locks, async/await, race conditions</span></li>
+            </ul>
+          </section>
+
+          <section class="ix__group" aria-labelledby="ix-g-ai">
+            <h4 class="ix__gtitle" id="ix-g-ai"><span data-i18n="ix.g.ai">AI and developer tooling</span><span class="ix__count"></span></h4>
+            <ul class="ix__list">
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.agents">Skills and plugins for AI agents</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.mcp">Claude Code with the Roblox Studio MCP</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.prompts">Structured prompts for Claude Code</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.studiolinux">Roblox Studio on Linux</span><span class="ix__detail">Vinegar, Rojo, Azul</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.asphalt">Asset uploads to Roblox</span><span class="ix__detail">Asphalt CLI</span></li>
+            </ul>
+          </section>
+
+          <section class="ix__group" aria-labelledby="ix-g-games">
+            <h4 class="ix__gtitle" id="ix-g-games"><span data-i18n="ix.g.games">Game development</span><span class="ix__count"></span></h4>
+            <ul class="ix__list">
+              <li class="ix__item"><span class="ix__name">Godot 4</span><span class="ix__detail" data-i18n="ix.godot.d">GDScript and C#</span></li>
+              <li class="ix__item"><span class="ix__name">Roblox</span><span class="ix__detail">Luau</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.unreal">C++ with Unreal Engine</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.gamesys">Custom game systems</span></li>
+              <li class="ix__item"><span class="ix__name">Multiplayer</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.authoritative">Authoritative client-server</span></li>
+              <li class="ix__item"><span class="ix__name">Netcode</span><span class="ix__detail" data-i18n="ix.netcode.d">client prediction, reconciliation, interpolation</span></li>
+              <li class="ix__item"><span class="ix__name">ECS</span><span class="ix__detail">Entity Component System</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.fsm">Finite state machines</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.services">Services reused across games</span><span class="ix__detail" data-i18n="ix.services.d">economy, ads</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.procedural">Procedural tracks and kart physics</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.prototypes">Game prototypes</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.bugs">Bug fixing</span></li>
+            </ul>
+          </section>
+
+          <section class="ix__group" aria-labelledby="ix-g-sys">
+            <h4 class="ix__gtitle" id="ix-g-sys"><span data-i18n="ix.g.sys">Linux, systems and hardware</span><span class="ix__count"></span></h4>
+            <ul class="ix__list">
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.arch.linux">Arch Linux / CachyOS with Hyprland</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.gpu">GPU setup</span><span class="ix__detail">iGPU + PRIME offload</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.ssd">External SSD over UASP</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.wifi">Wi-Fi security auditing</span><span class="ix__detail">wifite2, hashcat</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.emu">Emulator troubleshooting</span><span class="ix__detail">Xenia Canary, netplay</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.firmware">Firmware flashing and hardware troubleshooting</span><span class="ix__detail">Xteink X4, DJI Agras T25 Pro</span></li>
+            </ul>
+          </section>
+
+          <section class="ix__group ix__group--study" aria-labelledby="ix-g-study">
+            <h4 class="ix__gtitle" id="ix-g-study"><span data-i18n="ix.g.study">Studying now</span><span class="ix__count"></span></h4>
+            <ul class="ix__list">
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.cpu">CPU architecture</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.turing">Turing completeness</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name">Hardware</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.mcu">Microcontrollers</span><span class="ix__detail">ESP32</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.llm">AI and LLMs</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+            </ul>
+          </section>
+
+          <section class="ix__group" aria-labelledby="ix-g-pro">
+            <h4 class="ix__gtitle" id="ix-g-pro"><span data-i18n="ix.g.pro">Freelance and languages</span><span class="ix__count"></span></h4>
+            <ul class="ix__list">
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.freelance">Freelancing for about 4 years</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.fiverr">Fiverr gig optimisation</span><span class="ix__detail" data-i18n="ix.fiverr.d">SEO and English copy</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.pt">Portuguese, native</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.en">English for international clients</span></li>
+            </ul>
+          </section>
+        </div>
       </div>
     </div>
   </section>
@@ -308,7 +490,7 @@
         <li class="repo" data-cover="assets/images/games/cozy-kart.png">
           <a class="repo__main" href="https://ian-reis.itch.io/cozy-kart" target="_blank" rel="noopener">
             <span class="repo__name">Cozy Kart</span>
-            <span class="repo__desc" data-i18n="g.cozy">A racing prototype. Plays in the browser.</span>
+            <span class="repo__desc" data-i18n="g.cozy">A racing prototype with procedural tracks and custom kart physics. Plays in the browser.</span>
           </a>
           <span class="repo__meta"><span class="repo__lang">Godot</span><span class="repo__when" data-i18n="g.prototype">Prototype</span></span>
         </li>
@@ -322,9 +504,9 @@
         <li class="repo" data-cover="assets/images/games/tsundoku.png">
           <a class="repo__main" href="https://ian-reis.itch.io/tsundoku" target="_blank" rel="noopener">
             <span class="repo__name">Tsundoku <span lang="ja">積ん読</span></span>
-            <span class="repo__desc" data-i18n="g.tsundoku">A downloader and reader for manga, web comics and novels.</span>
+            <span class="repo__desc" data-i18n="g.tsundoku">A downloader and reader for manga and light novels, with a Python toolchain behind it.</span>
           </a>
-          <span class="repo__meta"><span class="repo__lang">Godot</span><span class="repo__when" data-i18n="g.indev">In development</span></span>
+          <span class="repo__meta"><span class="repo__lang">Godot + Python</span><span class="repo__when" data-i18n="g.indev">In development</span></span>
         </li>
       </ul>
     </div>

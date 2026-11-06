@@ -226,10 +226,11 @@
   safe('reveals', () => {
     if (!('IntersectionObserver' in window)) return;
     const heads = $$('.sec__head');
-    const items = [...$$('.repo'), ...$$('.insight'), $('.contact')].filter(Boolean);
+    const items = [...$$('.repo'), ...$$('.insight'), ...$$('.ix__group'), $('.contact')].filter(Boolean);
     items.forEach((n) => n.classList.add('reveal'));
     $$('.repos').forEach((list) => $$('.repo', list).forEach((li, i) => li.style.setProperty('--i', String(i))));
     $$('.insight').forEach((f, i) => f.style.setProperty('--i', String(i)));
+    $$('.ix__group').forEach((g, i) => g.style.setProperty('--i', String(i % 3)));
     const io = new IntersectionObserver((entries) => {
       entries.forEach((en) => {
         if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); }
@@ -245,11 +246,13 @@
     const map = $('.map');
     if (!map) return;
 
+    const rowEls = $$('.map__row', map);
     const nodes = $$('.node', map).map((node) => ({
       el: node,
       id: node.dataset.id,
       to: (node.dataset.to || '').split(/\s+/).filter(Boolean),
       stage: Number(node.dataset.stage) || 0,
+      row: rowEls.indexOf(node.closest('.map__row')),
       games: node.closest('.map__row').dataset.row === 'games',
       up: [],
       down: [],
@@ -324,7 +327,7 @@
 
     /* scroll-driven build: stages appear in dependency order and go back if you scroll up */
     const scrubbing = root.classList.contains('motion') && !reduced;
-    const order = (n) => n.stage + (n.games ? 0.6 : 0);
+    const order = (n) => n.stage + Math.max(0, n.row) * 0.5; // later rows start a little later
     const maxOrder = Math.max(...nodes.map(order)) + 1;
     const ease = (v) => 1 - (1 - v) * (1 - v);
     const setNode = (n, v) => {
@@ -536,6 +539,59 @@
       requestAnimationFrame(layout);
     });
     sync();
+  });
+
+  /* ── Full index: counts, filter (all / in practice / studying), find-and-highlight ── */
+  safe('index', () => {
+    const ix = $('#index');
+    if (!ix) return;
+    const items = $$('.ix__item', ix);
+    const groups = $$('.ix__group', ix);
+    const groupsEl = $('.ix__groups', ix);
+    const btns = $$('.ix__btn', ix);
+    const isStudy = (li) => li.dataset.status === 'study';
+    const counts = { all: items.length, study: items.filter(isStudy).length };
+    counts.practice = counts.all - counts.study;
+    btns.forEach((b) => { $('b', b).textContent = String(counts[b.dataset.filter]); });
+
+    let current = 'all';
+    const tally = () => groups.forEach((g) => {
+      const visible = $$('.ix__item', g).filter((li) => !li.hidden).length;
+      $('.ix__count', g).textContent = String(visible);
+      g.hidden = visible === 0;
+    });
+    const apply = (f) => {
+      current = f;
+      items.forEach((li) => { li.hidden = f === 'all' ? false : (f === 'study' ? !isStudy(li) : isStudy(li)); });
+      btns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === f)));
+      tally();
+    };
+    const setFilter = (f) => {
+      if (f === current) return;
+      if (reduced || typeof groupsEl.animate !== 'function') { apply(f); return; }
+      const out = groupsEl.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(6px)' }], { duration: 160, easing: EASE, fill: 'forwards' });
+      out.onfinish = () => {
+        apply(f);
+        out.cancel();
+        groupsEl.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 360, easing: EASE });
+      };
+    };
+    btns.forEach((b) => b.addEventListener('click', () => setFilter(b.dataset.filter)));
+    $('.ix__filter', ix).hidden = false;
+    tally();
+
+    api.index = {
+      items,
+      show(li) {
+        if (li.hidden) apply('all');
+        if (api.revealAll) api.revealAll();
+        li.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+        li.classList.remove('is-flash');
+        void li.offsetWidth; // restart the highlight animation
+        li.classList.add('is-flash');
+      },
+      reset() { apply('all'); },
+    };
   });
 
   /* ── GitHub data (one cached request feeds dates, languages, timeline and previews) ── */
@@ -851,6 +907,7 @@
     const commands = () => [
       { g: 'go', id: 'top', label: t('cmd.top'), kw: 'home inicio topo', run: () => go('#top') },
       { g: 'go', id: 'skills', label: t('cmd.skills'), kw: 'skills habilidades map mapa', run: () => go('#skills') },
+      { g: 'go', id: 'index', label: t('cmd.index'), kw: 'index indice lista list skills habilidades', run: () => go('#index') },
       { g: 'go', id: 'work', label: t('cmd.work'), kw: 'work trabalho repositories repositorios', run: () => go('#work') },
       { g: 'go', id: 'games', label: t('cmd.games'), kw: 'games jogos itch', run: () => go('#games') },
       { g: 'go', id: 'contact', label: t('cmd.contact'), kw: 'contact contato email', run: () => go('#contact') },
@@ -872,6 +929,20 @@
         const hay = norm(`${c.label} ${c.kw}`);
         return words.every((w) => hay.includes(w));
       });
+      // typing also searches every entry of the full skill index
+      if (words.length && api.index) {
+        const found = [];
+        api.index.items.forEach((li, i) => {
+          if (found.length >= 8) return;
+          const name = $('.ix__name', li).textContent.trim();
+          const detail = $('.ix__detail', li);
+          const label = detail ? `${name} (${detail.textContent.trim()})` : name;
+          if (words.every((w) => norm(label).includes(w))) {
+            found.push({ g: 'skills', id: `ix-${i}`, label, kw: '', run: () => api.index.show(li) });
+          }
+        });
+        items = items.concat(found);
+      }
       active = clamp(active, 0, Math.max(0, items.length - 1));
       const out = [];
       let group = null;
@@ -917,7 +988,7 @@
     const run = (i) => {
       const c = items[i];
       if (!c) return;
-      closePalette(c.g !== 'go');
+      closePalette(c.g !== 'go' && c.g !== 'skills'); // navigation moves the reader, so focus stays put
       setTimeout(c.run, 30);
     };
 

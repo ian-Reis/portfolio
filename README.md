@@ -13,7 +13,10 @@ Publicado em <https://ian-reis.github.io/portfolio/>.
   aplicado antes da primeira pintura, sem piscar.
 - **Hero.** O título sobe de uma máscara enquanto o peso da fonte vai de 100 a 300. Depois, as letras
   ganham peso perto do cursor e uma luz suave acompanha o mouse sobre a grade de pontos.
-- **Mapa de skills.** Sistemas → dados → decisão, mais a trilha de jogos. Constrói-se conforme a rolagem
+- **Índice completo.** Todas as habilidades (74) em 9 grupos, com o que está em estudo marcado. Filtro
+  "Tudo / Na prática / Estudando" e busca pelo menu de comandos (digite, por exemplo, "redis").
+- **Mapa de skills.** Três trilhas: sistemas → dados → decisão; automação e ferramentas de IA; e jogos.
+  Constrói-se conforme a rolagem
   (e desfaz se você subir). Passar o mouse, focar ou tocar acende o caminho inteiro; os pontos de dados
   aceleram nele. Clicar abre um painel com o que a skill abrange, o trabalho público que a comprova (quando
   existe) e as skills conectadas. No celular o painel é uma folha que sobe da base da tela.
@@ -64,6 +67,11 @@ fica no objeto `pt` de `assets/js/i18n.js`, com a mesma chave.
 disso. O texto do painel fica em `skills` (EN e PT) e os links de trabalho público em `work`, ambos em
 `i18n.js`.
 
+**Índice completo.** Em `index.html`, dentro de `<div class="ix" id="index">`. Cada habilidade é um
+`<li class="ix__item">` com `ix__name` e, opcionalmente, `ix__detail`. Para marcar como estudo, use
+`data-status="study"` e acrescente `<span class="ix__tag" data-i18n="ix.studying">studying</span>`.
+Contagens e filtro são automáticos.
+
 **Work.** `<li class="repo" data-repo="nome-do-repo">` em `index.html`. A data, a barra de linguagens,
 a linha do tempo e a prévia de commit vêm da API pública do GitHub, com cache de 6 horas no navegador.
 Se a API falhar, a lista continua completa.
@@ -75,11 +83,13 @@ Já está no GitHub Pages: basta fazer push para `main` do repositório `ian-Rei
 ## Conteúdo a revisar
 
 - **PDV:** "PVD" foi lido como PDV (ponto de venda).
+- **Análise de dados, BI, dashboards, PDV e sistemas de gestão** vieram da primeira lista de habilidades e
+  continuam no site; a lista completa enviada depois não os citava.
 - **Textos do painel de skills** (`skills` em `i18n.js`): descrevem o que cada área abrange. Ajuste o que
   não refletir o seu trabalho.
 - Confirme o Discord (`ian.reis_`) e o link do Fiverr (só um link de texto no contato).
 
 ## Medições
 
-Lighthouse 12, servidor local: desktop 100 / 100 / 100 / 100; mobile 97 / 100 / 100 / 100
-(performance / acessibilidade / boas práticas / SEO). Cerca de 168 KiB na primeira visita.
+Lighthouse 12, servidor local: desktop 100 / 100 / 100 / 100; mobile 96 / 100 / 100 / 100
+(performance / acessibilidade / boas práticas / SEO).
