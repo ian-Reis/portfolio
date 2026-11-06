@@ -269,14 +269,10 @@
   safe('header', () => {
     const bar = $('#bar');
     const prog = $('#progress');
-    const heroEl = $('.hero');
     let queued = false;
     const frame = () => {
       queued = false;
       const y = window.scrollY;
-      // the hero is always space: while the header floats over it, the header is dark too
-      const overHero = !!heroEl && y < heroEl.offsetTop + heroEl.offsetHeight - bar.offsetHeight;
-      if (overHero) bar.dataset.theme = 'dark'; else bar.removeAttribute('data-theme');
       bar.classList.toggle('is-solid', y > 8);
       bar.classList.toggle('is-compact', y > 160);
       const max = root.scrollHeight - window.innerHeight;

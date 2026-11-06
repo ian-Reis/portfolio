@@ -1,9 +1,13 @@
-/* A black hole in the hero, computed from scratch: no model, no textures.
-   Every pixel traces a light ray backwards through Schwarzschild spacetime (units of the
-   Schwarzschild radius, photon orbit equation a = -1.5 h² r / |r|⁵). Where the ray crosses the
-   accretion disk it picks up light coloured by temperature (blackbody ramp), shifted by Doppler
-   beaming and gravitational redshift; where it escapes it lands on a sky of dust, stars and a
-   spiral of matter falling in, all bent by the lens.
+/* An ASCII black hole in the hero, computed from scratch: no model, no textures, no images.
+   Two passes on the GPU:
+   1. physics at character resolution: one light ray per character cell (about 11k on a desktop
+      instead of a million pixels) traced backwards through Schwarzschild spacetime (units of the
+      Schwarzschild radius, photon orbit equation a = -1.5 h² r / |r|⁵). Crossing the accretion disk it
+      picks up light coloured by temperature, shifted by Doppler beaming and gravitational redshift;
+      escaping, it lands on a sky of dust, stars and a spiral of matter falling in, all bent by the lens.
+   2. glyphs: each cell becomes a character from an atlas drawn with the site's own mono font.
+      Brightness picks from " .:-=+*#%@"; along bright structures, strokes (- / | \) follow the light;
+      stars are . + *, infalling matter · o, jets | !.
 
    What it does:
    - forms when the page opens and sends a gravitational wave through the sky and the title
@@ -12,16 +16,17 @@
      (spaghettification); on release they spring back, a wave goes out and jets fire from the poles
    - scroll: the camera falls towards the hole
    - the pointer tilts the view and works as a small lens of its own
-   Reduced motion: one still frame. Paused off screen, in hidden tabs and in the overview. */
+   Reduced motion or software rendering: one still frame. Paused off screen, in hidden tabs and in the overview. */
 
 const VERT = `#version 300 es
 in vec2 aPos;
 void main() { gl_Position = vec4(aPos, 0.0, 1.0); }`;
 
-const FRAG = `#version 300 es
+/* pass 1: one ray per character cell; rgb = light (tone-mapped), a = what kind of cell it is */
+const CELLS = `#version 300 es
 precision highp float;
-uniform vec2 uRes;        // drawing buffer, px
-uniform float uScale;     // drawing-buffer px per CSS px
+uniform vec2 uRes;        // grid size, cells
+uniform vec2 uCellPx;     // cell size, CSS px
 uniform vec2 uHole;       // hole on screen, CSS px from the top left of the hero
 uniform float uPx;        // CSS px per unit of tan(angle)
 uniform float uDist;      // camera distance (the scroll dive brings it closer)
@@ -32,7 +37,6 @@ uniform float uForm;      // 0 → 1 while the hole forms
 uniform float uHeat;      // brightness of the disk (feeding raises it)
 uniform float uJet;       // relativistic jets, 0 → 1
 uniform float uFlash;     // photon ring flash
-uniform vec3 uPaper;      // background, pre-compensated for the tone curve
 uniform vec2 uMouse;      // CSS px
 uniform vec3 uWave;       // wave origin (CSS px) and age in seconds (< 0: none)
 uniform vec4 uSpot[4];    // falling stars: radius, angle, arc length, brightness
@@ -72,7 +76,7 @@ float gas(vec2 xz, float r) {
 }
 
 void main() {
-  vec2 frag = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y) / uScale;
+  vec2 frag = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y) * uCellPx; // the centre of this cell, CSS px
 
   float ci = cos(uIncl); float si = sin(uIncl);
   vec3 cam = vec3(0.0, si, ci) * uDist;
@@ -107,7 +111,7 @@ void main() {
       v += -1.5 * h2 * p / (r2 * r2 * r) * dt;
       vec3 np = p + v * dt;
 
-      // a thin glowing atmosphere around the disk: reads as bloom
+      // a thin glowing atmosphere around the disk
       float rx = length(p.xz);
       float hz = exp(-abs(p.y) * 2.0) * smoothstep(ROUT + 4.0, RIN + 1.0, rx) * smoothstep(RIN * 0.7, RIN * 1.3, rx) * pow(RIN / max(rx, RIN), 1.4);
       em += (1.0 - a) * vec3(1.0, 0.55, 0.2) * hz * dt * 0.045 * uHeat * uForm;
@@ -149,12 +153,13 @@ void main() {
     if (!captured && length(p) < 4.0 && dot(p, fwd) < PLANE) captured = true;
   }
 
-  // the shadow's edge is exactly the critical impact parameter √27/2: anti-alias it over one pixel
-  float bw = uDist / (uPx * uScale) * 0.9;
+  // the shadow: rays with an impact parameter below √27/2 fall in
+  float bw = uDist / uPx * uCellPx.x * 0.5;
   float sa = 1.0 - smoothstep(2.598 - bw, 2.598 + bw, b);
   a += (1.0 - a) * sa;
 
-  vec3 bg = uPaper;
+  float kind = 0.0; // 0 light, 1 star, 2 infalling matter, 3 jet
+  vec3 bg = vec3(0.0);
   if (!captured) {
     vec3 vE = near > 0.0 ? normalize(mix(vA, v, near)) : vA;
     vec3 pE = near > 0.0 ? mix(pA, p, near) : pA;
@@ -174,59 +179,53 @@ void main() {
         vec2 dv = q - uWave.xy; float dd = length(dv);
         float R = uWave.z * 620.0;
         float k = exp(-pow((dd - R) / 90.0, 2.0)) * exp(-uWave.z * 0.7);
-        q += (dv / max(dd, 1.0)) * sin((dd - R) * 0.08) * 14.0 * k;
+        q += (dv / max(dd, 1.0)) * sin((dd - R) * 0.08) * 22.0 * k;
       }
       // the pointer is a small lens of its own
       vec2 dm = q - uMouse;
-      q -= dm * 360.0 / (dot(dm, dm) + 600.0);
+      q -= dm * 900.0 / (dot(dm, dm) + 1400.0);
 
-      float px = length(fwidth(q));
-      float clean = 1.0 - smoothstep(3.0, 8.0, px);
-
-      // dust: warm and cool clouds, very faint, bent around the hole like everything else
+      // dust: warm and cool clouds, faint
       float neb = fbm(q * 0.0021 + vec2(11.3, 4.1));
-      vec3 nebC = mix(vec3(0.2, 0.08, 0.03), vec3(0.05, 0.07, 0.13), fbm(q * 0.0012 + 3.7));
-      bg += nebC * pow(neb, 3.2) * 0.85;
+      vec3 nebC = mix(vec3(0.24, 0.1, 0.04), vec3(0.06, 0.08, 0.15), fbm(q * 0.0012 + 3.7));
+      bg += nebC * pow(neb, 3.0) * 1.1;
 
-      // stars, two layers
-      for (int l = 0; l < 2; l++) {
-        float cs = l == 0 ? 31.0 : 79.0;
-        vec2 sc = floor(q / cs);
-        float h1 = hash(sc + float(l) * 7.31);
-        if (h1 > (l == 0 ? 0.82 : 0.7)) {
-          vec2 sp = (sc + 0.2 + 0.6 * vec2(hash(sc + 3.1), hash(sc + 7.7))) * cs;
-          float sd = length(q - sp);
-          float size = l == 0 ? 0.55 : 1.0;
-          float st = (1.0 - smoothstep(size * 0.4, size + 0.9 + px * 0.5, sd)) / max(1.0, px * 0.6);
-          st *= (l == 0 ? 0.35 : 0.8) * (0.65 + 0.35 * sin(uTime * (0.8 + h1) + h1 * 60.0)) * clean;
-          vec3 sCol = mix(vec3(1.0, 0.82, 0.62), vec3(0.75, 0.85, 1.0), hash(sc + 1.9));
-          bg += sCol * st;
+      // stars: at most one per block of 5 × 3 cells
+      vec2 sg = uCellPx * vec2(5.0, 3.0);
+      vec2 sc = floor(q / sg);
+      float h1 = hash(sc + 0.37);
+      if (h1 > 0.66) {
+        vec2 sp = (sc + 0.15 + 0.7 * vec2(hash(sc + 3.1), hash(sc + 7.7))) * sg;
+        vec2 d = abs(q - sp) / uCellPx;
+        if (d.x < 0.5 && d.y < 0.5) {
+          float tw = 0.55 + 0.45 * sin(uTime * (0.8 + h1) + h1 * 60.0);
+          bg += mix(vec3(1.0, 0.82, 0.62), vec3(0.75, 0.85, 1.0), hash(sc + 1.9)) * (0.22 + 0.7 * (h1 - 0.66) / 0.34) * tw;
+          kind = 1.0;
         }
       }
 
-      // matter falling in: rings spaced in free-fall time, turning faster as they sink, heating up
+      // matter falling in: rings spaced in free-fall time, sliding along a fixed spiral, heating up
       vec2 dh = q - uHole;
       float dl = length(dh);
       float rho = dl / uShadowPx;
-      if (rho > 1.3) {
+      if (rho > 1.3 && kind < 0.5) {
         float u = pow(rho, 1.5) * 1.6 + uTime * 0.55;
         float rid = floor(u);
-        // a fixed spiral: each dot slides along it as it sinks (no shear piling up over time)
         float th = atan(dh.y, dh.x) / TAU + 0.42 / sqrt(rho);
-        float M = 46.0;
+        float M = 40.0;
         float gc = th * M + hash(vec2(rid, 1.7)) * 7.0;
         float cell = floor(gc);
-        float keep = step(0.42, hash(vec2(rid, cell)));
+        float keep = step(0.8, hash(vec2(rid, cell))) * step(rho, 6.0);
         vec2 ctr = vec2(0.5 + (hash(vec2(cell, rid + 3.0)) - 0.5) * 0.5, 0.5 + (hash(vec2(rid, cell + 9.0)) - 0.5) * 0.6);
         float du = 2.4 * sqrt(rho) / uShadowPx;
         float dg = M / (TAU * max(dl, 1.0));
-        float dd = length(vec2((fract(u) - ctr.x) / du, (fract(gc) - ctr.y) / dg));
-        float heat = smoothstep(8.0, 1.6, rho);
-        float rad = 0.8 + heat * 0.8;
-        float pa = keep * (1.0 - smoothstep(rad, rad + 1.2, dd)) * (0.3 + 0.7 * hash(vec2(cell, rid)));
-        pa *= smoothstep(1.3, 2.2, rho) * clean * uForm;
-        vec3 pc = mix(vec3(0.8, 0.76, 0.7), bb(0.45 + heat * 0.55), heat);
-        bg += pc * pa * (0.16 + heat * 1.0);
+        float dd = length(vec2((fract(u) - ctr.x) / du, (fract(gc) - ctr.y) / dg)); // CSS px
+        if (keep > 0.5 && dd < uCellPx.x * 0.75) {
+          float heat = smoothstep(8.0, 1.6, rho);
+          vec3 pc = mix(vec3(0.8, 0.76, 0.7), bb(0.45 + heat * 0.55), heat);
+          bg += pc * (0.2 + heat * 0.9) * smoothstep(1.3, 2.2, rho) * uForm;
+          kind = 2.0;
+        }
       }
     }
   }
@@ -245,13 +244,65 @@ void main() {
       d *= x.y > 0.0 ? 1.0 : 0.35;                     // the jet pointing away is dimmer (beaming)
       jc += d;
     }
-    em += (1.0 - sa) * vec3(0.55, 0.72, 1.0) * jc * stepT * 0.75 * uJet;
+    vec3 jet = vec3(0.55, 0.72, 1.0) * jc * stepT * 0.75 * uJet * (1.0 - sa);
+    if (max(jet.b, 0.0) > 0.12) kind = 3.0;
+    em += jet;
   }
 
   vec3 col = em + (1.0 - a) * bg;
-  col = 1.0 - exp(-col * 1.35); // soft tone curve: highlights roll off like film
-  o = vec4(col, 1.0);
+  col = 1.0 - exp(-col * 1.35); // soft tone curve
+  o = vec4(col, kind / 255.0);
 }`;
+
+/* pass 2: every pixel finds its cell and draws that cell's character from the atlas */
+const GLYPHS = `#version 300 es
+precision highp float;
+uniform sampler2D uCells;
+uniform sampler2D uAtlas;
+uniform vec2 uRes;       // drawing buffer, px
+uniform ivec2 uCell;     // cell size, drawing-buffer px
+uniform ivec2 uGrid;     // cols, rows
+uniform vec3 uPaper;
+uniform float uTime;
+uniform float uLight;    // 0 dark theme (light on space), 1 light theme (ink on paper)
+out vec4 o;
+// atlas: 0-9 " .:-=+*#%@" · 10-13 "|\\-/" · 14-16 ".+*" (stars) · 17-18 "·o" (infall) · 19-20 "|!" (jets)
+float lum(vec3 c) { return max(c.r, max(c.g, c.b)); }
+vec4 cellAt(ivec2 c) { return texelFetch(uCells, clamp(c, ivec2(0), uGrid - 1), 0); }
+// brightness of a neighbour for the stroke direction; stars, grains and jets are not edges of the light
+float edgeL(ivec2 c, float self) { vec4 n = cellAt(c); return n.a > 0.5 / 255.0 ? self : lum(n.rgb); }
+void main() {
+  ivec2 pix = ivec2(int(gl_FragCoord.x), int(uRes.y - gl_FragCoord.y));
+  ivec2 cell = pix / uCell;
+  ivec2 inCell = pix - cell * uCell;
+  ivec2 ci = ivec2(cell.x, uGrid.y - 1 - cell.y);
+  vec4 c = cellAt(ci);
+  float L = lum(c.rgb);
+  int kind = int(c.a * 255.0 + 0.5);
+  int idx;
+  if (kind == 1) idx = L > 0.55 ? 16 : (L > 0.3 ? 15 : 14);
+  else if (kind == 2) idx = L > 0.75 ? 18 : 17;
+  else if (kind == 3) idx = 19 + int(step(0.5, fract(float(cell.y) * 0.37 - uTime * 3.0)));
+  else {
+    idx = int(floor(clamp(pow(L, 0.75), 0.0, 0.999) * 10.0));
+    // strokes along bright structures: the gradient of the light gives their direction
+    float gx = edgeL(ci + ivec2(1, 0), L) - edgeL(ci - ivec2(1, 0), L);
+    float gy = edgeL(ci + ivec2(0, 1), L) - edgeL(ci - ivec2(0, 1), L);
+    if (length(vec2(gx, gy)) > 0.24 && L > 0.1 && L < 0.82) {
+      float ang = mod(atan(gy, gx) + 3.14159265 / 8.0, 3.14159265);
+      idx = 10 + int(ang / (3.14159265 / 4.0));
+    }
+  }
+  if (idx == 0) { o = vec4(uPaper, 1.0); return; }
+  float m = texelFetch(uAtlas, ivec2(idx * uCell.x + inCell.x, inCell.y), 0).a;
+  vec3 hue = c.rgb / max(L, 0.001);
+  float k = clamp(L * 1.25, 0.0, 1.0);
+  vec3 glow = hue * (0.42 + 0.58 * k);                       // dark theme: brighter light, brighter character
+  vec3 ink = pow(hue, vec3(1.7)) * (0.6 - 0.24 * k);          // light theme: brighter light, deeper ink
+  o = vec4(mix(uPaper, mix(glow, ink, uLight), m), 1.0);
+}`;
+
+const ATLAS = [' ', '.', ':', '-', '=', '+', '*', '#', '%', '@', '|', '\\', '-', '/', '.', '+', '*', '·', 'o', '|', '!'];
 
 export function init(host) {
   const { doc, root, $, $$, themeHooks, langHooks, cssVar, t, finePointer } = host;
@@ -261,10 +312,9 @@ export function init(host) {
   const canvas = doc.createElement('canvas');
   canvas.className = 'hero__ink hero__hole';
   canvas.setAttribute('aria-hidden', 'true');
-  const gl = canvas.getContext('webgl2', { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'high-performance' });
+  const gl = canvas.getContext('webgl2', { alpha: false, antialias: false, depth: false, stencil: false });
   if (!gl) return null;
-  // without a GPU (software rendering) a full-screen ray tracer would drag the whole page down: show one still frame there,
-  // as for people who asked their system for reduced motion
+  // without a GPU (software rendering) animate nothing: one still frame, as under reduced motion
   const info = gl.getExtension('WEBGL_debug_renderer_info');
   const renderer = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : '';
   const software = /swiftshader|llvmpipe|softpipe|software|basic render/i.test(renderer);
@@ -273,21 +323,28 @@ export function init(host) {
   // compile without blocking the page: the driver works in the background and we poll until it is done
   const parallel = gl.getExtension('KHR_parallel_shader_compile');
   const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
-  const fs = sh(gl.FRAGMENT_SHADER, FRAG);
-  const prog = gl.createProgram();
-  gl.attachShader(prog, sh(gl.VERTEX_SHADER, VERT));
-  gl.attachShader(prog, fs);
-  gl.bindAttribLocation(prog, 0, 'aPos');
-  gl.linkProgram(prog);
-  const U = {};
+  const vs = sh(gl.VERTEX_SHADER, VERT);
+  const make = (src) => {
+    const fs = sh(gl.FRAGMENT_SHADER, src);
+    const p = gl.createProgram();
+    gl.attachShader(p, vs);
+    gl.attachShader(p, fs);
+    gl.bindAttribLocation(p, 0, 'aPos');
+    gl.linkProgram(p);
+    return { p, fs, U: {} };
+  };
+  const P1 = make(CELLS);
+  const P2 = make(GLYPHS);
   let linked = false;
   const finishLink = () => {
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-      if (window.console) console.warn('[fx/blackhole]', gl.getShaderInfoLog(fs) || gl.getProgramInfoLog(prog));
-      return false;
+    for (const P of [P1, P2]) {
+      if (!gl.getProgramParameter(P.p, gl.LINK_STATUS)) {
+        if (window.console) console.warn('[fx/blackhole]', gl.getShaderInfoLog(P.fs) || gl.getProgramInfoLog(P.p));
+        return false;
+      }
+      const count = gl.getProgramParameter(P.p, gl.ACTIVE_UNIFORMS);
+      for (let i = 0; i < count; i += 1) { const u = gl.getActiveUniform(P.p, i); P.U[u.name.replace(/\[0\]$/, '')] = gl.getUniformLocation(P.p, u.name); }
     }
-    const count = gl.getProgramParameter(prog, gl.ACTIVE_UNIFORMS);
-    for (let i = 0; i < count; i += 1) { const info = gl.getActiveUniform(prog, i); U[info.name.replace(/\[0\]$/, '')] = gl.getUniformLocation(prog, info.name); }
     linked = true;
     return true;
   };
@@ -297,29 +354,72 @@ export function init(host) {
   gl.enableVertexAttribArray(0);
   gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
 
-  /* ── the background colour, compensated for the tone curve so the canvas meets the page exactly ── */
+  const texture = (filter) => {
+    const tx = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tx);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filter);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    return tx;
+  };
+  const cellTex = texture(gl.NEAREST);
+  const atlasTex = texture(gl.NEAREST);
+  const fb = gl.createFramebuffer();
+
+  /* ── the background, as the hero's own token ── */
   let paper = [0, 0, 0];
+  let light = 0;
   const readPaper = () => {
-    const m = (cssVar('--paper', hero).match(/[\da-f]{2}/gi) || ['07', '08', '0b']).slice(0, 3).map((h) => parseInt(h, 16) / 255);
-    paper = m.map((c) => -Math.log(1 - Math.min(c, 0.98)) / 1.35);
+    paper = (cssVar('--paper', hero).match(/[\da-f]{2}/gi) || ['07', '08', '0b']).slice(0, 3).map((h) => parseInt(h, 16) / 255);
+    light = root.dataset.theme === 'dark' ? 0 : 1;
   };
   readPaper();
 
-  /* ── size and placement ── */
-  let W = 0; let H = 0;
-  let scale = Math.min(window.devicePixelRatio || 1, 1);
+  /* ── grid, atlas and placement ── */
+  let W = 0; let H = 0; let dpr = 1;
+  let cellCss = [8, 15]; let cellBuf = [8, 15]; let cols = 1; let rows = 1;
   const home = { x: 0, y: 0 };
   let basePx = 900;
   const DIST0 = 22;
+  const mono = getComputedStyle(root).getPropertyValue('--mono').trim() || 'monospace';
+  const buildAtlas = () => {
+    const fontPx = W < 600 ? 11 : 13;
+    const m = doc.createElement('canvas').getContext('2d');
+    m.font = `500 ${fontPx}px ${mono}`;
+    const adv = m.measureText('M').width || fontPx * 0.6;
+    cellBuf = [Math.max(4, Math.round(adv * dpr)), Math.max(8, Math.round(fontPx * 1.18 * dpr))];
+    cellCss = [cellBuf[0] / dpr, cellBuf[1] / dpr];
+    const a = doc.createElement('canvas');
+    a.width = cellBuf[0] * ATLAS.length;
+    a.height = cellBuf[1];
+    const x = a.getContext('2d');
+    x.fillStyle = '#fff';
+    x.font = `500 ${fontPx * dpr}px ${mono}`;
+    x.textAlign = 'center';
+    x.textBaseline = 'middle';
+    ATLAS.forEach((ch, i) => x.fillText(ch, (i + 0.5) * cellBuf[0], cellBuf[1] * 0.54));
+    gl.bindTexture(gl.TEXTURE_2D, atlasTex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, a);
+  };
   const resize = () => {
     W = hero.offsetWidth; H = hero.offsetHeight;
-    canvas.width = Math.max(1, Math.round(W * scale));
-    canvas.height = Math.max(1, Math.round(H * scale));
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.max(1, Math.round(W * dpr));
+    canvas.height = Math.max(1, Math.round(H * dpr));
+    buildAtlas();
+    cols = Math.ceil(canvas.width / cellBuf[0]);
+    rows = Math.ceil(canvas.height / cellBuf[1]);
+    gl.bindTexture(gl.TEXTURE_2D, cellTex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, cols, rows, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, cellTex, 0);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     // big and high in the hero; the words sit below it on a dark floor
     const wide = W >= 1000;
     home.x = W * 0.5;
-    home.y = H * (wide ? 0.37 : 0.31);
-    const shadowPx = wide ? Math.min(H * 0.115, W * 0.08) : Math.min(W * 0.15, H * 0.085);
+    home.y = H * (wide ? 0.37 : 0.27);
+    const shadowPx = wide ? Math.min(H * 0.115, W * 0.08) : Math.min(W * 0.11, H * 0.06);
     basePx = shadowPx / (Math.sqrt(27) / 2 / DIST0);
     measureWords();
   };
@@ -418,6 +518,8 @@ export function init(host) {
 
   /* ── input ── */
   const ac = new AbortController();
+  let press = null;
+  let holdTimer = 0;
   const local = (e) => { const r = hero.getBoundingClientRect(); const k = r.width / W || 1; return [(e.clientX - r.left) / k, (e.clientY - r.top) / k]; };
   hero.addEventListener('pointermove', (e) => {
     if (reduced) return;
@@ -428,8 +530,6 @@ export function init(host) {
   hero.addEventListener('pointerleave', () => { st.mx = -9999; st.my = -9999; st.pmy = 0.5; }, { signal: ac.signal });
 
   // short press: drop a star; long press: feed
-  let press = null;
-  let holdTimer = 0;
   hero.addEventListener('pointerdown', (e) => {
     if (reduced || e.button !== 0 || e.target.closest('a, button, input, .hero__lead, .status')) return;
     press = { x: e.clientX, y: e.clientY, t: now() };
@@ -465,19 +565,14 @@ export function init(host) {
   themeHooks.push(onTheme);
 
   /* ── loop ── */
-  let running = false; let visible = false; let raf = 0; let dead = false;
-  let slow = 0; let frames = 0; let last = 0;
+  let running = false; let visible = false; let raf = 0; let dead = false; let last = 0;
+  let formT0 = 0;
   const spotData = new Float32Array(16);
   const frame = (tnow) => {
     raf = 0;
     if (!running) return;
     const dt = Math.min(0.05, (tnow - (last || tnow)) / 1000);
-    if (last) { frames += 1; if (tnow - last > 21) slow += 1; }
     last = tnow;
-    if (frames >= 24) {
-      if (slow > 14 && scale > 0.45) { scale = Math.max(0.45, scale * 0.78); resize(); }
-      frames = 0; slow = 0;
-    }
 
     if (!reduced) {
       // forming: the hole grows out of nothing, then rings
@@ -515,31 +610,48 @@ export function init(host) {
       return true;
     });
 
-    const form = st.form;
-    const ease = 1 - (1 - form) ** 3;
+    const ease = 1 - (1 - st.form) ** 3;
     const dist = DIST0 - st.dive * 9;
     const px = basePx * st.mass * (0.12 + 0.88 * ease);
     const shadowPx = (Math.sqrt(27) / 2 / dist) * px;
+    const time = reduced ? 14 : (tnow - t0) / 1000;
 
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.useProgram(prog);
-    gl.uniform2f(U.uRes, canvas.width, canvas.height);
-    gl.uniform1f(U.uScale, canvas.width / W);
+    // pass 1: the physics, one ray per character cell
+    let U = P1.U;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+    gl.viewport(0, 0, cols, rows);
+    gl.useProgram(P1.p);
+    gl.uniform2f(U.uRes, cols, rows);
+    gl.uniform2f(U.uCellPx, cellCss[0], cellCss[1]);
     gl.uniform2f(U.uHole, st.hx, st.hy);
     gl.uniform1f(U.uPx, px);
     gl.uniform1f(U.uDist, dist);
     gl.uniform1f(U.uShadowPx, shadowPx);
     gl.uniform1f(U.uIncl, st.incl);
-    gl.uniform1f(U.uTime, reduced ? 14 : (tnow - t0) / 1000);
-    gl.uniform1f(U.uForm, form);
+    gl.uniform1f(U.uTime, time);
+    gl.uniform1f(U.uForm, st.form);
     gl.uniform1f(U.uHeat, st.heat);
     gl.uniform1f(U.uJet, st.jet);
     gl.uniform1f(U.uFlash, st.flash);
-    gl.uniform3fv(U.uPaper, paper);
     gl.uniform2f(U.uMouse, st.mx, st.my);
     const wage = st.wave.t0 < 0 ? -1 : (tnow - st.wave.t0) / 1000;
     gl.uniform3f(U.uWave, st.wave.x, st.wave.y, wage > 5 ? -1 : wage);
     gl.uniform4fv(U.uSpot, spotData);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    // pass 2: characters
+    U = P2.U;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.useProgram(P2.p);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, cellTex); gl.uniform1i(U.uCells, 0);
+    gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, atlasTex); gl.uniform1i(U.uAtlas, 1);
+    gl.uniform2f(U.uRes, canvas.width, canvas.height);
+    gl.uniform2i(U.uCell, cellBuf[0], cellBuf[1]);
+    gl.uniform2i(U.uGrid, cols, rows);
+    gl.uniform3fv(U.uPaper, paper);
+    gl.uniform1f(U.uTime, time);
+    gl.uniform1f(U.uLight, light);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
     wordsTick(dt, tnow);
@@ -562,18 +674,18 @@ export function init(host) {
   doc.addEventListener('visibilitychange', update, { signal: ac.signal });
   canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); destroy(); }, { signal: ac.signal });
 
-  // show it only once the program is ready, so the page never waits on the shader compiler
-  let formT0 = 0;
-  const ready = new Promise((resolve) => {
+  // show it only once the programs are ready and the mono font is in, so the page never waits
+  const compiled = new Promise((resolve) => {
     if (!parallel) { setTimeout(() => resolve(finishLink()), 0); return; }
     const poll = () => {
       if (dead) { resolve(false); return; }
-      if (gl.getProgramParameter(prog, parallel.COMPLETION_STATUS_KHR)) resolve(finishLink());
-      else setTimeout(poll, 60);
+      const done = [P1, P2].every((P) => gl.getProgramParameter(P.p, parallel.COMPLETION_STATUS_KHR));
+      if (done) resolve(finishLink()); else setTimeout(poll, 60);
     };
     poll();
   });
-  ready.then((ok) => {
+  const fontReady = doc.fonts && doc.fonts.load ? doc.fonts.load(`500 13px ${mono}`).catch(() => null) : Promise.resolve();
+  Promise.all([compiled, fontReady]).then(([ok]) => {
     if (!ok || dead) { destroy(); return; }
     const bg = $('.hero__bg', hero);
     if (bg) bg.after(canvas); else hero.prepend(canvas);

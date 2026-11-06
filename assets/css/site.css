@@ -196,8 +196,8 @@ kbd {
 html[data-theme="dark"] .theme-switch__port { transform: translateX(20px); background: var(--accent); border-color: var(--accent); }
 
 /* ── Hero ── */
-/* the hero is a window into space in both themes (data-theme="dark" on the section): full screen,
-   the black hole above, the words anchored at the bottom */
+/* the hero: full screen, the black hole above, the words anchored at the bottom; it follows the theme
+   (dark: glowing characters on space; light: the same black hole printed in ink on paper) */
 .hero {
   position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end;
   min-height: 100vh; min-height: 100svh; padding: calc(var(--bar-h) + 48px) 0 clamp(48px, 7vw, 96px);

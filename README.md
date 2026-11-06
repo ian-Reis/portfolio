@@ -62,8 +62,12 @@ Tudo nasce de onde a pessoa agiu, num gesto só, com a mesma curva:
 Cada efeito é um módulo ES carregado sob demanda; se um falhar ou o navegador não tiver suporte, a página
 continua igual sem ele.
 
-- **Buraco negro no hero** (`blackhole.js`, WebGL2, em qualquer tela; fundo padrão): feito do zero, sem
-  modelo nem textura. O hero é uma janela para o espaço nos dois temas (tela cheia, sempre escuro; o
+- **Buraco negro em ASCII no hero** (`blackhole.js`, WebGL2, em qualquer tela; fundo padrão): feito do zero,
+  sem modelo, textura nem imagem. Duas passadas na GPU: primeiro a física, com um raio de luz por célula de
+  caractere (cerca de 11 mil no desktop, em vez de um milhão de pixels); depois cada célula vira um caractere
+  desenhado com a própria fonte mono do site. O brilho escolhe entre ` .:-=+*#%@`, as estruturas claras ganham
+  traços na direção da luz (`- / | \`), estrelas são `. + *`, a matéria caindo `· o` e os jatos `| !`.
+  Cerca de 6 ms por quadro numa GPU integrada, mesmo em tela 2x (a versão em pixels levava 18 ms). O hero é uma janela para o espaço nos dois temas (tela cheia, sempre escuro; o
   cabeçalho fica escuro enquanto está sobre ele). Cada pixel traça um raio de luz pelo espaço-tempo de
   Schwarzschild; ao cruzar o disco de acreção pega luz com cor de temperatura (vermelho, laranja, dourado,
   branco), deslocada pelo efeito Doppler (o lado que vem na sua direção fica mais branco) e pelo desvio
@@ -171,5 +175,4 @@ com a carga da máquina: nas mesmas condições, a versão anterior às animaç�
 efeitos de `fx/`: desktop 100 / 100 / 100 / 100; mobile 92 / 100 / 100 / 100 (duas medições seguidas).
 Com o buraco negro grande e a paleta nova: desktop 99–100 / 100 / 100 / 100; mobile 92 / 100 / 100 / 100
 em três medições seguidas, sem deslocamento de layout (CLS 0). Numa GPU
-integrada Intel UHD, cada quadro do buraco negro em tela cheia leva cerca de 18 ms no desktop (a resolução
-se ajusta sozinha) e 6 ms num celular de 390 px.
+integrada Intel UHD, cada quadro do buraco negro em ASCII leva cerca de 6 ms, em tela 1x e 2x.
