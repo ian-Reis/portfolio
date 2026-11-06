@@ -418,7 +418,7 @@ export function init(host) {
     // big and high in the hero; the words sit below it on a dark floor
     const wide = W >= 1000;
     home.x = W * 0.5;
-    home.y = H * (wide ? 0.37 : 0.27);
+    home.y = H * (wide ? 0.33 : 0.27);
     const shadowPx = wide ? Math.min(H * 0.115, W * 0.08) : Math.min(W * 0.11, H * 0.06);
     basePx = shadowPx / (Math.sqrt(27) / 2 / DIST0);
     measureWords();

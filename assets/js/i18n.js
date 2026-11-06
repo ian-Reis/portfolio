@@ -21,7 +21,7 @@ window.I18N = (() => {
     'hero.l2': 'de software.',
     status: 'Aberto para comissões e serviços',
     'status.full': 'Aberto para comissões e serviços.',
-    'hero.lead': 'Sou Ian Reis, freelancer há cerca de quatro anos. Construo sistemas do zero: software de gestão e de PDV, APIs, automações e a análise de dados por trás deles. Também crio jogos em Godot e Roblox, e trabalho em português e inglês.',
+    'hero.lead': 'Sou Ian Reis, freelancer há cerca de quatro anos. Construo backends do zero com IA aplicada: APIs, agentes de IA, servidores MCP, automações e sistemas de gestão e PDV, integrados a APIs de LLM como Claude, OpenAI e Gemini. Também crio jogos em Godot e Roblox, e trabalho em português e inglês.',
     'cta.github': 'Ver meu GitHub',
     'cta.email': 'Enviar e-mail',
     'skills.title': 'Habilidades',
