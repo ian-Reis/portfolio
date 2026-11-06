@@ -36,8 +36,29 @@ Publicado em <https://ian-reis.github.io/portfolio/>.
 - **Imprimir currículo.** Ao imprimir (ou salvar como PDF) a página vira um currículo de duas páginas,
   com os links escritos por extenso.
 - **Detalhes.** Barra de progresso de leitura, indicador deslizante no menu, linhas de seção que se
-  desenham, sublinhados que varrem, copiar e-mail com confirmação, imagem de compartilhamento
-  (`assets/images/og.png`).
+  desenham, copiar e-mail com confirmação, imagem de compartilhamento (`assets/images/og.png`).
+
+### Movimento com origem (a mesma família da troca de tema)
+
+Tudo nasce de onde a pessoa agiu, num gesto só, com a mesma curva:
+
+- **Skill → painel:** o cartão clicado cresce e vira o painel; ao fechar, o painel encolhe de volta nele.
+- **Idioma:** o texto visível sai para cima e o novo idioma entra por baixo, em cascata, como um placar.
+- **Filtro do índice:** cada item desliza até o novo lugar; a página abaixo sobe suavemente.
+- **Menu de comandos:** nasce do botão que o abriu e se recolhe nele. `?` mostra os atalhos.
+- **Modo inspeção:** uma linha de varredura desce revelando o grid e sobe para tirá-lo.
+- **Fio condutor:** uma linha na margem (telas ≥ 1100 px) liga todas as seções; cada título é uma porta
+  que acende quando você passa, com um ponto vivo na frente da leitura.
+- **Cursor:** sublinhados nascem do lado por onde o mouse entrou, a linha das linhas de repositório se abre
+  a partir do cursor, e cada clique deixa um anel fino.
+- **Heatmap:** mira de semana e dia da semana no hover, com o total do mês; contadores que rolam.
+- **Títulos:** uma onda de peso percorre cada título de seção ao aparecer; o logo vira "IR" ao rolar.
+- **404:** página própria com uma ligação partida; o botão volta ao site pelo mesmo círculo da troca de tema
+  (View Transitions entre páginas).
+- **Acabamentos:** ícone da aba acompanha o tema; carregamento com brilho suave no lugar de espaço vazio.
+
+Módulos não essenciais iniciam quando o navegador fica ocioso, cada um em sua tarefa, para não bloquear a
+primeira pintura.
 
 Tudo respeita `prefers-reduced-motion`: sem animações de entrada nem pontos em movimento; as
 interações continuam. Sem JavaScript, a página aparece completa em inglês.
@@ -100,5 +121,6 @@ Já está no GitHub Pages: basta fazer push para `main` do repositório `ian-Rei
 
 ## Medições
 
-Lighthouse 12, servidor local: desktop 100 / 100 / 100 / 100; mobile 96 / 100 / 100 / 100
-(performance / acessibilidade / boas práticas / SEO).
+Lighthouse 12, servidor local: desktop 100 / 100 / 100 / 100; mobile 92 / 100 / 100 / 100
+(performance / acessibilidade / boas práticas / SEO). A nota de performance no mobile varia alguns pontos
+com a carga da máquina: nas mesmas condições, a versão anterior às animações mediu o mesmo 92.
