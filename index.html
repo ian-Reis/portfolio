@@ -416,6 +416,21 @@
         <p class="sec__note" data-i18n-html="work.note">Public repositories on <a href="https://github.com/ian-Reis?tab=repositories" target="_blank" rel="noopener">GitHub</a>.</p>
       </header>
 
+      <!-- contribution calendar incl. private repositories (assets/data/activity.json, refreshed daily by a GitHub Action) -->
+      <figure class="activity" id="activity" hidden data-c="Activity">
+        <figcaption class="activity__head">
+          <span class="insight__label" data-i18n="act.label">Contributions in the last year, private repositories included</span>
+          <span class="activity__total" id="act-total"></span>
+        </figcaption>
+        <div class="hm" id="heatmap">
+          <div class="hm__months" aria-hidden="true"></div>
+          <div class="hm__grid" role="img"></div>
+        </div>
+        <p class="hm__legend" aria-hidden="true">
+          <span data-i18n="act.less">Less</span><i data-l="0"></i><i data-l="1"></i><i data-l="2"></i><i data-l="3"></i><i data-l="4"></i><span data-i18n="act.more">More</span>
+        </p>
+      </figure>
+
       <!-- live from the GitHub API; stays hidden if it cannot load -->
       <div class="insights" id="insights" hidden data-c="Insights">
         <figure class="insight">
@@ -424,7 +439,7 @@
           <ul class="langbar__legend" id="langlegend"></ul>
         </figure>
         <figure class="insight">
-          <figcaption class="insight__label" data-i18n="work.timeline">Last push of each repository</figcaption>
+          <figcaption class="insight__label" data-i18n="work.timeline">Last push of each public repository</figcaption>
           <div class="timeline" id="timeline"></div>
         </figure>
       </div>
