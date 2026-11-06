@@ -27,6 +27,7 @@
 
   const scrollHooks = [];
   const langHooks = [];
+  const themeHooks = []; // fn(theme, { x, y }) after a theme change
   const api = {}; // cross-module handles
   const safe = (name, fn) => { try { fn(); } catch (err) { if (window.console) console.warn(`[${name}]`, err); } };
   // non-critical modules start after the first paint, each in its own short task, so no single long task blocks the page
@@ -109,26 +110,96 @@
       if (meta) meta.setAttribute('content', dark ? '#0E1418' : '#F2F4F3');
       if (fav) fav.setAttribute('href', dark ? ICON_DARK : ICON_LIGHT);
     };
-    const set = (next, origin) => {
+    // opts: { x, y } to start the circle from a point, fromRadius to continue a circle that is already open,
+    // during() runs inside the transition update (used by the lantern to remove itself from the new snapshot)
+    const set = (next, origin, opts = {}) => {
+      const r = origin ? origin.getBoundingClientRect() : null;
+      const x = opts.x !== undefined ? opts.x : (r ? r.left + r.width / 2 : window.innerWidth - 60);
+      const y = opts.y !== undefined ? opts.y : (r ? r.top + r.height / 2 : 32);
       const apply = () => {
         root.dataset.theme = next;
         try { localStorage.setItem('ir:theme', next); } catch (e) { /* private mode */ }
         sync();
+        if (opts.during) opts.during();
+        themeHooks.forEach((fn) => safe('themehook', () => fn(next, { x, y })));
       };
-      const r = origin ? origin.getBoundingClientRect() : null;
-      const x = r ? r.left + r.width / 2 : window.innerWidth - 60;
-      const y = r ? r.top + r.height / 2 : 32;
       const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
       const vt = startVT(apply);
       if (!vt) { apply(); return; }
       vt.ready.then(() => {
         root.animate(
-          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+          { clipPath: [`circle(${opts.fromRadius || 0}px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
           { duration: 700, easing: EASE, pseudoElement: '::view-transition-new(root)' },
         );
       }).catch(() => {});
     };
-    btn.addEventListener('click', () => set(current() === 'dark' ? 'light' : 'dark', btn));
+
+    /* lantern: hold the switch and drag. A circle shows the page in the other theme;
+       release away from the switch to pour that theme out from the circle, or release on it to just peek */
+    const R = 150;
+    let lantern = null;
+    let holdTimer = 0;
+    let suppressClick = false;
+    const placeLantern = (px, py) => {
+      lantern.x = px; lantern.y = py;
+      lantern.layer.style.clipPath = `circle(${R}px at ${px}px ${py}px)`;
+      lantern.ring.style.transform = `translate(${px}px, ${py}px)`;
+    };
+    const openLantern = (px, py) => {
+      const other = current() === 'dark' ? 'light' : 'dark';
+      const layer = el('div', 'lantern');
+      layer.setAttribute('aria-hidden', 'true');
+      layer.inert = true;
+      layer.dataset.theme = other;
+      const stage = el('div', 'lantern__stage');
+      [$('main'), $('.foot')].forEach((n) => { if (n) stage.appendChild(n.cloneNode(true)); });
+      stage.style.transform = `translateY(${-window.scrollY}px)`;
+      const bar = $('#bar').cloneNode(true);
+      bar.removeAttribute('id');
+      layer.append(stage, bar);
+      const ring = el('i', 'lantern__ring');
+      doc.body.append(layer, ring);
+      lantern = { layer, ring, other, x0: px, y0: py, x: px, y: py };
+      placeLantern(px, py);
+      if (canAnimate) {
+        layer.animate({ clipPath: [`circle(0px at ${px}px ${py}px)`, `circle(${R}px at ${px}px ${py}px)`] }, { duration: 380, easing: EASE });
+        ring.animate([{ scale: 0, opacity: 0 }, { scale: 1, opacity: 1 }], { duration: 380, easing: EASE });
+      }
+    };
+    const closeLantern = (applyIt) => {
+      if (!lantern) return;
+      const { layer, ring, other, x, y } = lantern;
+      lantern = null;
+      const remove = () => { layer.remove(); ring.remove(); };
+      if (applyIt) { set(other, null, { x, y, fromRadius: R, during: remove }); if (!doc.startViewTransition || reduced) remove(); return; }
+      if (!canAnimate) { remove(); return; }
+      layer.animate({ clipPath: [`circle(${R}px at ${x}px ${y}px)`, `circle(0px at ${x}px ${y}px)`] }, { duration: 260, easing: EASE, fill: 'forwards' });
+      ring.animate([{ scale: 1, opacity: 1 }, { scale: 0, opacity: 0 }], { duration: 260, easing: EASE, fill: 'forwards' }).finished.then(remove, remove);
+    };
+    btn.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      const id = e.pointerId;
+      clearTimeout(holdTimer);
+      holdTimer = setTimeout(() => {
+        suppressClick = true;
+        try { btn.setPointerCapture(id); } catch (err) { /* pointer already gone */ }
+        openLantern(e.clientX, e.clientY);
+      }, 260);
+    });
+    btn.addEventListener('pointermove', (e) => { if (lantern) placeLantern(e.clientX, e.clientY); });
+    const endHold = (e, cancel) => {
+      clearTimeout(holdTimer);
+      if (!lantern) return;
+      const moved = Math.hypot(e.clientX - lantern.x0, e.clientY - lantern.y0) > 28;
+      closeLantern(!cancel && moved);
+    };
+    btn.addEventListener('pointerup', (e) => endHold(e, false));
+    btn.addEventListener('pointercancel', (e) => endHold(e, true));
+    doc.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lantern) closeLantern(false); });
+    btn.addEventListener('click', () => {
+      if (suppressClick) { suppressClick = false; return; }
+      set(current() === 'dark' ? 'light' : 'dark', btn);
+    });
     const mq = matchMedia('(prefers-color-scheme: dark)');
     const follow = (e) => {
       let saved = null;
@@ -157,8 +228,12 @@
       if (!canAnimate) { I.set(next); return; }
       switching = true;
       const vh = window.innerHeight;
+      // the hero title melts from one language into the other (fx/morph.js) when available; everything else flips
+      const morph = api.morph && api.morph.ready() ? api.morph : null;
+      const job = morph ? morph.capture() : null;
       const all = $$('[data-i18n], [data-i18n-html]').filter((n) => {
         if (n.closest('.palette, .sr, [hidden], .inspect, .toast')) return false;
+        if (job && n.closest('.hero__title')) return false;
         const r = n.getBoundingClientRect();
         return r.width > 0 && r.bottom > 0 && r.top < vh;
       });
@@ -179,6 +254,7 @@
         I.set(next);
         outs.forEach((a) => a.cancel());
         blocks.forEach((n) => { if (n.isConnected) move(n, false); });
+        if (job) safe('morph', () => morph.play(job));
         switching = false;
       });
     };
@@ -1236,6 +1312,7 @@
       { g: 'open', id: 'github', label: t('cmd.github'), kw: 'github code codigo', run: () => openTab(GITHUB) },
       { g: 'open', id: 'itch', label: t('cmd.itch'), kw: 'itch games jogos', run: () => openTab(ITCH) },
       { g: 'open', id: 'mail', label: t('cmd.mail'), kw: 'email e-mail mail', run: () => { window.location.href = `mailto:${EMAIL}`; } },
+      ...(api.commands || []).map((make) => make()).filter(Boolean), // added by the optional fx modules
     ];
     const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
@@ -1246,6 +1323,8 @@
       [['?'], t('keys.help')],
       [['Esc'], t('keys.esc')],
       [['↑', '↓', 'Enter'], t('keys.nav')],
+      ...(api.keys || []).map((make) => make()),
+      ...(finePointer && !reduced ? [[['◐'], t('keys.lantern')]] : []),
     ];
     const renderKeys = () => {
       items = [];
@@ -1495,6 +1574,45 @@
       const row = e.target.closest('.repo');
       if (row && !row.contains(e.relatedTarget)) row.style.setProperty('--ox', `${(e.clientX - row.getBoundingClientRect().left).toFixed(0)}px`);
     });
+  });
+
+  /* ── Effects lab: heavy pieces live in assets/js/fx/ and load only when idle, only where they make sense ── */
+  later('fx', () => {
+    const gl2 = (() => { try { return !!doc.createElement('canvas').getContext('webgl2'); } catch (e) { return false; } })();
+    const desktop = wide.matches && finePointer;
+    const host = {
+      doc, root, I, t, api, reduced, finePointer, wide, el, $, $$, EASE, clamp,
+      startVT, canAnimate, countUp, langHooks, scrollHooks, themeHooks, toast,
+      cssVar: (name, scope = root) => getComputedStyle(scope).getPropertyValue(name).trim(),
+    };
+    const load = (file) => import(`./fx/${file}`)
+      .then((m) => m.init(host))
+      .catch((err) => { if (window.console) console.warn(`[fx/${file}]`, err); });
+    // modules for things further down load only when those things come near the screen
+    const near = (sel, file) => {
+      const target = $(sel);
+      if (!target || !('IntersectionObserver' in window)) { load(file); return; }
+      const io = new IntersectionObserver((entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        io.disconnect();
+        load(file);
+      }, { rootMargin: '900px 0px' });
+      io.observe(target);
+    };
+    near('#index', 'algos.js'); // canvas 2D, works everywhere (reduced motion steps through without animating)
+    if (desktop) load('overview.js');
+    if (gl2 && !reduced) {
+      if (desktop) load('fluid.js');
+      if (desktop) near('#work', 'city.js');
+      // the title morph: right away on desktop; on phones only once the language button is touched
+      const langBtn = $('#lang-toggle');
+      if (desktop || !langBtn) load('morph.js');
+      else {
+        let queued = false;
+        const once = () => { if (!queued) { queued = true; load('morph.js'); } };
+        ['pointerenter', 'focus', 'touchstart'].forEach((ev) => langBtn.addEventListener(ev, once, { once: true, passive: true }));
+      }
+    }
   });
 
   if (api.refreshScroll) api.refreshScroll();
