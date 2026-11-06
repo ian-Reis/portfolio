@@ -824,55 +824,11 @@
       return true;
     };
 
-    const timeline = () => {
-      const tl = $('#timeline');
-      const own = repos.filter((r) => !r.fork && r.pushed).map((r) => ({ ...r, d: new Date(r.pushed) })).filter((r) => !Number.isNaN(r.d.getTime()));
-      if (own.length < 2) return false;
-      own.sort((a, b) => a.d - b.d);
-      const firstYear = own[0].d.getFullYear();
-      const start = new Date(firstYear, 0, 1).getTime();
-      const now = Date.now();
-      const end = Math.max(now, own[own.length - 1].d.getTime()) + 1000 * 3600 * 24 * 20;
-      const pos = (time) => ((time - start) / (end - start)) * 100;
-      const parts = [el('div', 'timeline__axis')];
-      for (let y = firstYear; y <= new Date(end).getFullYear(); y += 1) {
-        const x = pos(new Date(y, 0, 1).getTime());
-        if (x < 0 || x > 100) continue;
-        const tick = el('span', 'timeline__tick');
-        tick.style.left = `${x}%`;
-        const label = el('span', 'timeline__year', String(y));
-        label.style.left = `${Math.max(2, x)}%`;
-        parts.push(tick, label);
-      }
-      const lanes = [-99, -99, -99];
-      own.forEach((r, i) => {
-        const x = pos(r.d.getTime());
-        let lane = lanes.findIndex((lx) => x - lx > 2.2);
-        if (lane === -1) lane = 0;
-        lanes[lane] = x;
-        const a = el('a', 'timeline__dot');
-        a.href = r.url; a.target = '_blank'; a.rel = 'noopener';
-        a.tabIndex = -1;
-        a.setAttribute('aria-hidden', 'true');
-        a.style.left = `${x}%`;
-        a.style.top = `${40 - lane * 14}px`;
-        a.style.setProperty('--i', String(i));
-        a.dataset.name = r.name;
-        a.dataset.when = r.pushed;
-        parts.push(a);
-      });
-      const years = `${firstYear}–${own[own.length - 1].d.getFullYear()}`;
-      parts.push(el('p', 'sr', `${own.length} ${t('timeline.repos')}, ${years}.`));
-      tl.replaceChildren(...parts);
-      return true;
-    };
-
     const render = () => {
       if (!repos) return;
       dates();
-      const a = languages();
-      const b = timeline();
-      if (insights) insights.hidden = !(a && b);
+      const hasLanguages = languages();
+      if (insights) insights.hidden = !hasLanguages;
       if (api.refreshScroll) requestAnimationFrame(api.refreshScroll);
     };
 
@@ -885,7 +841,6 @@
         insights.hidden = false;
         insights.classList.add('is-loading');
         $('#langbar').replaceChildren(el('span', 'sk'));
-        $('#timeline').replaceChildren(el('div', 'timeline__axis'));
       }, 150);
       getRepos()
         .then((data) => {
@@ -895,7 +850,6 @@
           render();
           if (wasLoading && canAnimate) {
             $$('#langbar span').forEach((s, i) => s.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 900, delay: i * 90, easing: EASE, fill: 'backwards' }));
-            $$('#timeline .timeline__dot').forEach((d, i) => d.animate([{ opacity: 0, transform: 'translateY(10px) scale(0.6)' }, { opacity: 1, transform: 'none' }], { duration: 500, delay: i * 45, easing: EASE, fill: 'backwards' }));
           }
         })
         .catch(() => { if (insights) { insights.classList.remove('is-loading'); insights.hidden = true; } })
@@ -996,17 +950,6 @@
       li.addEventListener('pointerleave', hide);
     });
 
-    const tl = $('#timeline');
-    if (tl) {
-      tl.addEventListener('pointerover', (e) => {
-        const dot = e.target.closest('.timeline__dot');
-        if (!dot) return;
-        follow(e);
-        show([el('p', 'peek__label', monthYear(dot.dataset.when)), el('p', 'peek__msg', dot.dataset.name)]);
-      });
-      tl.addEventListener('pointermove', follow);
-      tl.addEventListener('pointerout', (e) => { if (e.target.closest('.timeline__dot')) hide(); });
-    }
     window.addEventListener('scroll', hide, { passive: true });
     api.peek = { show, follow, hide };
   });
