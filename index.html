@@ -47,6 +47,7 @@
     if (lang !== 'en' && lang !== 'pt') lang = /^pt\b/i.test(navigator.language || '') ? 'pt' : 'en';
     r.lang = lang === 'pt' ? 'pt-BR' : 'en';
     try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) r.classList.add('motion'); } catch (e) {}
+    r.classList.add('scripted'); // before first paint: layout that depends on JavaScript can be reserved without a shift
     setTimeout(function () { if (!window.__siteReady) r.classList.remove('motion'); }, 3000); // fail-safe
     var meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', theme === 'dark' ? '#0E1418' : '#F2F4F3');
