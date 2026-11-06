@@ -222,7 +222,7 @@ html[data-theme="dark"] .theme-switch__port { transform: translateX(20px); backg
 .hero__title .ch { display: inline-block; white-space: pre; will-change: auto; }
 .hero.is-free .hero__line { overflow: visible; }
 .hole__hint {
-  position: absolute; left: 50%; top: calc(var(--bar-h) + 14px); z-index: 1; width: max-content; max-width: 90vw; translate: -50% 0;
+  position: absolute; left: 50%; bottom: 18px; z-index: 1; width: max-content; max-width: 90vw; translate: -50% 0;
   font: 400 12.5px/1.4 var(--mono); color: var(--slate); letter-spacing: 0.01em; pointer-events: none;
   opacity: 0; transition: opacity 0.8s var(--ease);
 }
@@ -231,6 +231,14 @@ html[data-theme="dark"] .theme-switch__port { transform: translateX(20px); backg
 .hero.has-hole { cursor: crosshair; }
 .hero.has-hole a, .hero.has-hole button, .hero.has-hole .hero__lead, .hero.has-hole .status { cursor: auto; }
 .hero.has-hole a, .hero.has-hole button { cursor: pointer; }
+/* wormhole jumps: the header stays put, the ring of characters draws above the spiralling page */
+.vt-worm .bar { view-transition-name: site-bar; }
+.worm { position: fixed; inset: 0; z-index: 200; width: 100vw; height: 100vh; pointer-events: none; view-transition-name: worm-ring; }
+::view-transition-group(site-bar), ::view-transition-old(site-bar), ::view-transition-new(site-bar),
+::view-transition-group(worm-ring), ::view-transition-new(worm-ring) { animation: none; }
+/* Hawking radiation: heading letters keep their width while they show other characters */
+.hk { display: inline-block; white-space: pre; text-align: center; will-change: transform; }
+
 .hero__morph { position: absolute; z-index: 2; pointer-events: none; }
 .hero__grid { position: relative; z-index: 1; width: 100%; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(32px, 5vw, 80px); align-items: end; }
 .hero__title { font: 300 clamp(44px, 9.2vw, 132px)/0.94 var(--font); letter-spacing: -0.045em; }

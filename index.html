@@ -28,7 +28,7 @@
   "email": "mailto:erickian2007@gmail.com",
   "url": "https://ian-reis.github.io/portfolio/",
   "knowsLanguage": ["pt-BR", "en"],
-  "knowsAbout": ["Software architecture", "RESTful APIs", "FastAPI", "Python", "Automation", "N8N", "Firebase", "CQRS", "Domain-Driven Design", "Clean Architecture", "Event-driven architecture", "Data structures and algorithms", "Management systems", "Point of sale", "Business intelligence", "Godot 4", "Roblox", "Luau", "C#", "Multiplayer netcode"],
+  "knowsAbout": ["Software architecture", "RESTful APIs", "FastAPI", "Python", "Automation", "N8N", "Firebase", "CQRS", "Domain-Driven Design", "Clean Architecture", "Event-driven architecture", "Data structures and algorithms", "Management systems", "Point of sale", "Business intelligence", "Godot 4", "Roblox", "Luau", "C#", "Multiplayer netcode", "LLM API integration", "AI agents", "Model Context Protocol (MCP) servers", "Prompt engineering", "Tool calling", "Local LLMs", "Speech-to-text"],
   "sameAs": ["https://github.com/ian-Reis", "https://ian-reis.itch.io/"]
 }
 </script>
@@ -55,6 +55,8 @@
     // arriving from the 404 page: open this page as a circle from the button that was clicked
     window.addEventListener('pagereveal', function (e) {
       if (!e.viewTransition) return;
+      // the browser may skip the transition: then the page simply appears, without an error
+      ['ready', 'finished', 'updateCallbackDone'].forEach(function (k) { if (e.viewTransition[k]) e.viewTransition[k].catch(function () {}); });
       var raw = null;
       try { raw = sessionStorage.getItem('ir:vt-origin'); sessionStorage.removeItem('ir:vt-origin'); } catch (err) {}
       if (!raw) { e.viewTransition.skipTransition(); return; }
@@ -63,7 +65,8 @@
         var rad = Math.hypot(Math.max(p.x, innerWidth - p.x), Math.max(p.y, innerHeight - p.y));
         r.animate({ clipPath: ['circle(0px at ' + p.x + 'px ' + p.y + 'px)', 'circle(' + rad + 'px at ' + p.x + 'px ' + p.y + 'px)'] },
           { duration: 700, easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)', pseudoElement: '::view-transition-new(root)' });
-      });
+      }).catch(function () { /* the browser skipped the transition: the page simply appears */ });
+      e.viewTransition.finished.catch(function () {});
     });
   })();
 </script>
@@ -364,6 +367,42 @@
               <li class="ix__item"><span class="ix__name" data-i18n="ix.prompts">Structured prompts for Claude Code</span></li>
               <li class="ix__item"><span class="ix__name" data-i18n="ix.studiolinux">Roblox Studio on Linux</span><span class="ix__detail">Vinegar, Rojo, Azul</span></li>
               <li class="ix__item"><span class="ix__name" data-i18n="ix.asphalt">Asset uploads to Roblox</span><span class="ix__detail">Asphalt CLI</span></li>
+            </ul>
+          </section>
+
+          <section class="ix__group" aria-labelledby="ix-g-aibe">
+            <h4 class="ix__gtitle" id="ix-g-aibe"><span data-i18n="ix.g.aibe">AI in the back end</span><span class="ix__count"></span></h4>
+            <ul class="ix__list">
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.llmapi">LLM API integration</span><span class="ix__detail">Claude, OpenAI, Gemini</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.stream">Streaming responses</span><span class="ix__detail">SSE, WebSockets</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.prompteng">Prompt engineering and system prompts</span></li>
+              <li class="ix__item"><span class="ix__name">Tool calling / function calling</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.aiagents">AI agents</span><span class="ix__detail" data-i18n="ix.aiagents.d">agentic loops, multi-agent</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.mcpserver">Building MCP servers</span><span class="ix__detail">Model Context Protocol</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.local">Local models</span><span class="ix__detail">Ollama, llama.cpp, vLLM</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.obs">AI observability</span><span class="ix__detail" data-i18n="ix.obs.d">tracing, token and cost logs</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.speech">Speech-to-text and text-to-speech</span><span class="ix__detail">Whisper</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.extract">Classification and data extraction with LLMs</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.memory">Agent memory and context management</span></li>
+              <li class="ix__item"><span class="ix__name" data-i18n="ix.n8nai">AI automation with N8N</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name">Structured outputs</span><span class="ix__detail">JSON Schema, Pydantic</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name">RAG</span><span class="ix__detail">Retrieval-Augmented Generation</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name">Embeddings</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.vectordb">Vector databases</span><span class="ix__detail">pgvector, Qdrant, Chroma, Pinecone</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.semsearch">Semantic and hybrid search</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.chunking">Document chunking</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name">LangChain / LlamaIndex / LangGraph</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name">Fine-tuning / LoRA</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name">Hugging Face Transformers</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.evals">LLM evaluation (evals)</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.pcache">Prompt caching and cost optimisation</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.guard">Guardrails, moderation and prompt-injection defence</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.aiqueues">Queues for long AI tasks</span><span class="ix__detail">Celery, RQ, Redis</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.jobs">Asynchronous job processing</span><span class="ix__detail">workers</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.vision">Computer vision and OCR with AI</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.docker">Docker for deploying AI services</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.cuda">GPU / CUDA for inference</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
+              <li class="ix__item" data-status="study"><span class="ix__name" data-i18n="ix.quant">Model quantisation</span><span class="ix__detail">GGUF, 4-bit / 8-bit</span><span class="ix__tag" data-i18n="ix.studying">studying</span></li>
             </ul>
           </section>
 

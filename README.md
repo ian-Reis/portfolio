@@ -13,7 +13,7 @@ Publicado em <https://ian-reis.github.io/portfolio/>.
   aplicado antes da primeira pintura, sem piscar.
 - **Hero.** O título sobe de uma máscara enquanto o peso da fonte vai de 100 a 300. Depois, as letras
   ganham peso perto do cursor e uma luz suave acompanha o mouse sobre a grade de pontos.
-- **Índice completo.** Todas as habilidades (74) em 9 grupos, com o que está em estudo marcado. Filtro
+- **Índice completo.** Todas as habilidades (104) em 10 grupos, com o que está em estudo marcado. Filtro
   "Tudo / Na prática / Estudando" e busca pelo menu de comandos (digite, por exemplo, "redis").
 - **Mapa de skills.** Três trilhas: sistemas → dados → decisão; automação e ferramentas de IA; e jogos.
   Constrói-se conforme a rolagem
@@ -84,6 +84,14 @@ continua igual sem ele.
   Sem GPU (renderização por software) ou com "reduzir movimento" ligado no sistema, aparece uma imagem
   parada. Compila o shader sem travar a página e baixa a resolução sozinho se os quadros ficarem lentos.
   Menu de comandos (desktop): "Fundo do topo: tinta" troca para a tinta (a escolha fica salva).
+- **Buraco de minhoca** (em `site.js`): ao clicar no menu, no logo ou num "Ir para" do menu de comandos, a
+  página gira e é sugada para o ponto do clique, atravessa um anel de caracteres e sai girando do centro da
+  tela, já na seção de destino. O cabeçalho fica parado.
+- **Radiação Hawking nos títulos:** cada título de seção se monta uma vez, com letras que caem de cima (de onde
+  está o buraco), esfriam pela escala `@%#*+=-:.` e assentam; leitores de tela recebem o título inteiro.
+- **404:** a página de erro tem o próprio buraco negro em ASCII, calculado uma vez no processador (sem WebGL),
+  com o endereço digitado espiralando para dentro do disco. O botão "Escapar de volta" lança os caracteres
+  para fora antes de voltar ao site.
 - **Tinta no hero** (`fluid.js`, WebGL2, desktop; alternativa ao buraco negro): simulação de fluido atrás do título. As letras são
   sólidas, então a tinta contorna o texto; o mouse mexe, correntes lentas mantêm vivo, e a troca de tema
   derrama um anel de tinta a partir do botão. Pausa fora da tela, com a aba oculta e na visão geral.

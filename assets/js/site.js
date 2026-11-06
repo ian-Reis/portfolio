@@ -74,20 +74,44 @@
     requestAnimationFrame(step);
   };
 
-  // a wave of weight runs through a heading once, echoing the hero type
+  // Hawking radiation: a heading assembles once from characters that fall in from above (where the black hole is),
+  // each one cooling through the brightness ramp of the hero before it settles on its letter
+  const RAMP = '@%#*+=-:.';
   const wave = (h) => {
     if (!canAnimate || !h || h.dataset.waved) return;
     h.dataset.waved = '1';
     const text = h.textContent;
-    const spans = [...text].map((ch) => el('span', '', ch));
+    const chars = [...text];
+    const spans = chars.map((ch) => el('span', 'hk', ch));
+    h.setAttribute('aria-label', text);
     h.replaceChildren(...spans);
-    const anims = spans.map((s, i) => s.animate(
-      [{ fontWeight: 400 }, { fontWeight: 640 }, { fontWeight: 400 }],
-      { duration: 900, delay: 150 + i * 38, easing: 'ease-in-out' },
-    ));
-    Promise.all(anims.map((a) => a.finished)).then(() => {
+    // keep every letter's own width while it shows other characters, so the line does not jitter
+    spans.forEach((s) => { if (s.textContent.trim()) s.style.width = `${s.getBoundingClientRect().width}px`; });
+    const hr = h.getBoundingClientRect();
+    const t0 = performance.now();
+    const DUR = 560;
+    const tick = (now) => {
+      let done = true;
+      spans.forEach((s, i) => {
+        const final = chars[i];
+        if (!final.trim()) return;
+        const t = (now - t0 - 90 - i * 42) / DUR;
+        if (t >= 1) { if (s.dataset.d !== '1') { s.dataset.d = '1'; s.textContent = final; s.style.transform = ''; s.style.opacity = ''; s.style.color = ''; } return; }
+        done = false;
+        if (t < 0) { s.style.opacity = '0'; return; }
+        const e = 1 - (1 - t) ** 3;
+        // falls from up and slightly towards the centre of the page, the direction of the hole
+        const dx = (window.innerWidth / 2 - (hr.left + i * 14)) * 0.04 * (1 - e);
+        s.style.transform = `translate(${dx.toFixed(1)}px, ${(-34 * (1 - e)).toFixed(1)}px)`;
+        s.style.opacity = String(Math.min(1, t * 2.5));
+        s.style.color = t < 0.85 ? 'var(--accent)' : '';
+        s.textContent = t < 0.82 ? RAMP[Math.min(RAMP.length - 1, Math.floor((t / 0.82) * RAMP.length))] : final;
+      });
+      if (!done && spans[0].isConnected) { requestAnimationFrame(tick); return; }
       if (spans[0].isConnected) h.textContent = text; // back to plain text (translations replace it anyway)
-    }).catch(() => {});
+      h.removeAttribute('aria-label');
+    };
+    requestAnimationFrame(tick);
   };
 
   /* ── platform key labels ── */
@@ -306,6 +330,105 @@
     langHooks.push(move);
     // reading document.fonts forces a full style/layout pass: do it once the page has painted
     idle(() => { if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(move); });
+  });
+
+  /* ── Wormhole: jumping to a section, the page spirals into a small black hole where you clicked
+        and comes out of a white hole in the middle of the screen, already at the destination ── */
+  safe('wormhole', () => {
+    const GLYPHS = '@%#*+=-:.';
+    const ringFrame = (cv, ox, oy, ex, ey, dur) => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = Math.round(window.innerWidth * dpr);
+      cv.height = Math.round(window.innerHeight * dpr);
+      const g = cv.getContext('2d');
+      g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const accent = getComputedStyle(root).getPropertyValue('--accent').trim() || '#F2A04A';
+      const mono = getComputedStyle(root).getPropertyValue('--mono').trim() || 'monospace';
+      const t0 = performance.now();
+      const draw = (now) => {
+        if (!cv.isConnected) return;
+        const t = Math.min(1, (now - t0) / dur);
+        g.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        g.font = `500 13px ${mono}`;
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.fillStyle = accent;
+        // in: rings of characters closing on the click; out: rings opening from the exit
+        const inP = Math.min(1, t / 0.5);
+        const outP = Math.max(0, (t - 0.42) / 0.58);
+        const rings = (x, y, k, opening) => {
+          for (let ring = 0; ring < 4; ring += 1) {
+            const base = opening ? (20 + ring * 46) * (0.2 + k * 1.6) : (180 - ring * 38) * (1 - k);
+            if (base < 2) continue;
+            const n = Math.max(8, Math.round(base / 7));
+            const spin = (opening ? -1 : 1) * (now / 1000) * (2.6 - ring * 0.4);
+            g.globalAlpha = (opening ? 1 - k : 0.35 + 0.65 * k) * (1 - ring * 0.18);
+            for (let i = 0; i < n; i += 1) {
+              const a = (i / n) * Math.PI * 2 + spin + ring;
+              g.fillText(GLYPHS[(i + ring) % GLYPHS.length], x + Math.cos(a) * base, y + Math.sin(a) * base * 0.92);
+            }
+          }
+        };
+        if (inP < 1) rings(ox, oy, inP, false);
+        if (outP > 0) rings(ex, ey, outP, true);
+        g.globalAlpha = 1;
+        if (t < 1) requestAnimationFrame(draw);
+      };
+      requestAnimationFrame(draw);
+    };
+
+    const travel = (sel, origin, at) => {
+      const target = typeof sel === 'string' ? $(sel) : sel;
+      if (!target || !canAnimate || typeof doc.startViewTransition !== 'function' || vtBusy || root.classList.contains('overview')) return false;
+      const r = origin ? origin.getBoundingClientRect() : null;
+      const ox = at ? at.x : (r ? r.left + r.width / 2 : window.innerWidth / 2);
+      const oy = at ? at.y : (r ? r.top + r.height / 2 : 40);
+      const ex = window.innerWidth / 2;
+      const ey = window.innerHeight * 0.45;
+      const top = target.id === 'top' ? 0 : Math.max(0, target.getBoundingClientRect().top + window.scrollY - 80);
+      if (Math.abs(top - window.scrollY) < 40) return false; // already there
+      root.classList.add('vt-worm'); // the header keeps still while the page spirals under it
+      let cv = null;
+      const DUR = 1000;
+      const vt = startVT(() => {
+        window.scrollTo({ top, behavior: 'instant' });
+        cv = el('canvas', 'worm');
+        cv.setAttribute('aria-hidden', 'true');
+        doc.body.appendChild(cv);
+      });
+      if (!vt) { root.classList.remove('vt-worm'); return false; }
+      vt.ready.then(() => {
+        if (cv) ringFrame(cv, ox, oy, ex, ey, DUR);
+        root.animate({
+          transform: ['rotate(0deg) scale(1)', 'rotate(-170deg) scale(0.02)'],
+          transformOrigin: [`${ox}px ${oy}px`, `${ox}px ${oy}px`],
+          filter: ['blur(0px)', 'blur(5px)'],
+          opacity: [1, 1, 0],
+        }, { duration: DUR * 0.5, easing: 'cubic-bezier(0.55, 0, 0.9, 0.4)', fill: 'forwards', pseudoElement: '::view-transition-old(root)' });
+        root.animate({
+          transform: ['rotate(150deg) scale(0.02)', 'rotate(0deg) scale(1)'],
+          transformOrigin: [`${ex}px ${ey}px`, `${ex}px ${ey}px`],
+          opacity: [0, 1, 1],
+        }, { duration: DUR * 0.62, delay: DUR * 0.38, easing: EASE, fill: 'both', pseudoElement: '::view-transition-new(root)' });
+      }).catch(() => {});
+      vt.finished.finally(() => {
+        root.classList.remove('vt-worm');
+        if (cv) cv.remove();
+        if (api.refreshScroll) api.refreshScroll();
+      });
+      return true;
+    };
+    api.travel = travel;
+
+    // the header's own links: the menu and the logo
+    $$('.nav > a[href^="#"], .brand[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      const sel = a.getAttribute('href');
+      if (!travel(sel, a, e.detail ? { x: e.clientX, y: e.clientY } : null)) return; // falls back to the normal jump
+      e.preventDefault();
+      if (history.pushState) history.pushState(null, '', sel);
+      if (!e.detail) { const t = $(sel); if (t) { if (!t.hasAttribute('tabindex')) t.setAttribute('tabindex', '-1'); t.focus({ preventScroll: true }); } }
+    }));
   });
 
   /* ── Hero: letters gain weight near the pointer; a soft light follows it over the dot grid ── */
@@ -1294,7 +1417,10 @@
     let active = 0;
     let lastFocus = null;
 
-    const go = (sel) => { const target = $(sel); if (target) target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }); };
+    const go = (sel) => {
+      if (api.travel && api.travel(sel, $('#open-palette'))) return; // through the wormhole
+      const target = $(sel); if (target) target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+    };
     const openTab = (url) => window.open(url, '_blank', 'noopener');
     const commands = () => [
       { g: 'go', id: 'top', label: t('cmd.top'), kw: 'home inicio topo', run: () => go('#top') },
