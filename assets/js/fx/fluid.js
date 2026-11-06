@@ -409,6 +409,7 @@ export function init(host) {
   };
   let last = null;
   const queue = [];
+  const ac = new AbortController(); // every listener goes away with destroy()
   hero.addEventListener('pointermove', (e) => {
     if (!S || (e.pointerType !== 'mouse' && e.pointerType !== 'pen')) return;
     const [x, y] = toUv(e.clientX, e.clientY);
@@ -422,8 +423,8 @@ export function init(host) {
       queue.push([x, y, vx * k * 0.6, vy * k * 0.6, Math.min(0.12, speed * 0.0009), 0]);
     }
     last = { x, y, t: now };
-  });
-  hero.addEventListener('pointerleave', () => { last = null; });
+  }, { signal: ac.signal });
+  hero.addEventListener('pointerleave', () => { last = null; }, { signal: ac.signal });
 
   let ambientT = 0;
   const ambient = (dt) => {
@@ -440,7 +441,7 @@ export function init(host) {
   };
 
   /* theme switch: a ring of ink pours out from where it was pressed */
-  themeHooks.push((theme, at) => {
+  const onTheme = (theme, at) => {
     readColors();
     if (!S || !running) return;
     const [x, y, r] = toUv(at.x, at.y);
@@ -452,13 +453,15 @@ export function init(host) {
       const a = (i / 14) * Math.PI * 2 + Math.random() * 0.2;
       queue.push([cx + Math.cos(a) * 0.01, cy + Math.sin(a) * 0.018, Math.cos(a) * 260, Math.sin(a) * 260, 0.5, i % 3 === 0 ? 1 : 0, 0.0022]);
     }
-  });
+  };
+  themeHooks.push(onTheme);
 
   /* ── loop ── */
   let running = false;
   let visible = false;
   let raf = 0;
   let prev = 0;
+  let dead = false;
   const frame = (now) => {
     raf = 0;
     if (!running) return;
@@ -471,30 +474,47 @@ export function init(host) {
     raf = requestAnimationFrame(frame);
   };
   const update = () => {
-    const should = visible && !doc.hidden && !!S && !doc.documentElement.classList.contains('overview');
+    const should = !dead && visible && !doc.hidden && !!S && !doc.documentElement.classList.contains('overview');
     if (should && !running) { running = true; prev = performance.now(); raf = requestAnimationFrame(frame); }
     if (!should && running) { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
   };
-  new IntersectionObserver((entries) => { visible = entries[entries.length - 1].isIntersecting; update(); }).observe(hero);
-  doc.addEventListener('visibilitychange', update);
-  new MutationObserver(update).observe(doc.documentElement, { attributes: true, attributeFilter: ['class'] }); // pauses during the overview
+  const io = new IntersectionObserver((entries) => { visible = entries[entries.length - 1].isIntersecting; update(); });
+  io.observe(hero);
+  doc.addEventListener('visibilitychange', update, { signal: ac.signal });
+  const mo = new MutationObserver(update); // pauses during the overview
+  mo.observe(doc.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-  canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); running = false; S = null; canvas.remove(); });
+  canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); running = false; S = null; canvas.remove(); }, { signal: ac.signal });
 
   let rt = 0;
   const rebuild = () => { clearTimeout(rt); rt = setTimeout(() => { if (doc.documentElement.classList.contains('overview')) return; if (build()) update(); }, 160); };
-  new ResizeObserver(rebuild).observe(hero);
-  langHooks.push(() => setTimeout(buildMask, 900)); // after the letters have settled into the new language
+  const ro = new ResizeObserver(rebuild);
+  ro.observe(hero);
+  const onLang = () => setTimeout(() => { if (!dead) buildMask(); }, 900); // after the letters have settled into the new language
+  langHooks.push(onLang);
 
   // first frame after the title has finished its entrance
-  setTimeout(() => {
+  const startT = setTimeout(() => {
     const bg = $('.hero__bg', hero);
     if (bg) bg.after(canvas); else hero.prepend(canvas);
     if (build()) {
       // a first slow breath of ink so the effect is discoverable without touching anything
       for (let i = 0; i < 3; i += 1) queue.push([0.12 + i * 0.36, 0.04, (Math.random() - 0.5) * 30, 70, 0.3, i % 2, 0.005]);
       update();
-      if (window.console && host.api) host.api.fluid = { splat: (...a) => queue.push(a), get running() { return running; } };
     }
   }, 1500);
+
+  return {
+    destroy() {
+      if (dead) return;
+      dead = true;
+      update();
+      clearTimeout(startT); clearTimeout(rt);
+      io.disconnect(); ro.disconnect(); mo.disconnect(); ac.abort();
+      [[themeHooks, onTheme], [langHooks, onLang]].forEach(([list, fn]) => { const i = list.indexOf(fn); if (i >= 0) list.splice(i, 1); });
+      canvas.remove();
+      const lose = gl.getExtension('WEBGL_lose_context');
+      if (lose) lose.loseContext();
+    },
+  };
 }
