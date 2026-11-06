@@ -340,18 +340,18 @@
           <section class="ix__group" aria-labelledby="ix-g-algo">
             <h4 class="ix__gtitle" id="ix-g-algo"><span data-i18n="ix.g.algo">Algorithms and data structures</span><span class="ix__count"></span></h4>
             <ul class="ix__list">
-              <li class="ix__item"><span class="ix__name" data-i18n="ix.queues">Queues, stacks, hash maps</span></li>
-              <li class="ix__item"><span class="ix__name" data-i18n="ix.linked">Linked lists</span></li>
-              <li class="ix__item"><span class="ix__name" data-i18n="ix.heap">Deque, priority queue, heap</span></li>
-              <li class="ix__item"><span class="ix__name" data-i18n="ix.trees">Binary trees, BST, AVL, red-black</span></li>
-              <li class="ix__item"><span class="ix__name">B-Trees</span></li>
-              <li class="ix__item"><span class="ix__name" data-i18n="ix.graphs">Graphs: BFS, DFS</span></li>
-              <li class="ix__item"><span class="ix__name" data-i18n="ix.bigo">Big-O and complexity analysis</span></li>
-              <li class="ix__item"><span class="ix__name" data-i18n="ix.sorting">Sorting algorithms</span></li>
-              <li class="ix__item"><span class="ix__name" data-i18n="ix.bsearch">Binary search</span></li>
-              <li class="ix__item"><span class="ix__name" data-i18n="ix.dp">Dynamic programming</span></li>
-              <li class="ix__item"><span class="ix__name" data-i18n="ix.recursion">Recursion and backtracking</span></li>
-              <li class="ix__item"><span class="ix__name" data-i18n="ix.concurrency">Concurrency</span><span class="ix__detail" data-i18n="ix.concurrency.d">threads, locks, async/await, race conditions</span></li>
+              <li class="ix__item" data-algo="queues"><span class="ix__name" data-i18n="ix.queues">Queues, stacks, hash maps</span></li>
+              <li class="ix__item" data-algo="linked"><span class="ix__name" data-i18n="ix.linked">Linked lists</span></li>
+              <li class="ix__item" data-algo="heap"><span class="ix__name" data-i18n="ix.heap">Deque, priority queue, heap</span></li>
+              <li class="ix__item" data-algo="trees"><span class="ix__name" data-i18n="ix.trees">Binary trees, BST, AVL, red-black</span></li>
+              <li class="ix__item" data-algo="btree"><span class="ix__name">B-Trees</span></li>
+              <li class="ix__item" data-algo="graphs"><span class="ix__name" data-i18n="ix.graphs">Graphs: BFS, DFS</span></li>
+              <li class="ix__item" data-algo="bigo"><span class="ix__name" data-i18n="ix.bigo">Big-O and complexity analysis</span></li>
+              <li class="ix__item" data-algo="sorting"><span class="ix__name" data-i18n="ix.sorting">Sorting algorithms</span></li>
+              <li class="ix__item" data-algo="bsearch"><span class="ix__name" data-i18n="ix.bsearch">Binary search</span></li>
+              <li class="ix__item" data-algo="dp"><span class="ix__name" data-i18n="ix.dp">Dynamic programming</span></li>
+              <li class="ix__item" data-algo="recursion"><span class="ix__name" data-i18n="ix.recursion">Recursion and backtracking</span></li>
+              <li class="ix__item" data-algo="concurrency"><span class="ix__name" data-i18n="ix.concurrency">Concurrency</span><span class="ix__detail" data-i18n="ix.concurrency.d">threads, locks, async/await, race conditions</span></li>
             </ul>
           </section>
 
@@ -576,6 +576,7 @@
     <span>&copy; 2026 Ian Reis</span>
     <span class="foot__tools">
       <button class="foot__btn" type="button" data-open-palette><span data-i18n="foot.palette">Commands</span> <kbd class="mod-key">Ctrl</kbd><kbd>K</kbd></button>
+      <button class="foot__btn" type="button" data-overview hidden><span data-i18n="foot.overview">Overview</span> <kbd>Shift</kbd><kbd>O</kbd></button>
       <button class="foot__btn" type="button" data-inspect aria-pressed="false" data-i18n="foot.inspect">Inspect layout</button>
       <button class="foot__btn" type="button" data-print data-i18n="foot.print">Print résumé</button>
     </span>
