@@ -183,7 +183,7 @@ void main() {
 }`;
 
 export function init(host) {
-  const { doc, root, $, themeHooks, cssVar } = host;
+  const { doc, root, $, themeHooks, cssVar, reduced } = host;
   const hero = $('.hero');
   if (!hero) return null;
 
@@ -246,10 +246,21 @@ export function init(host) {
     W = hero.offsetWidth; H = hero.offsetHeight;
     canvas.width = Math.max(1, Math.round(W * scale));
     canvas.height = Math.max(1, Math.round(H * scale));
-    // between the two columns, above the text: the title and the lead stay readable
-    home.x = W * (W < 1100 ? 0.6 : 0.47);
-    home.y = Math.max(128, H * 0.27);
-    const shadowPx = Math.max(40, Math.min(70, H * 0.1));
+    let shadowPx;
+    if (W >= 1000) {
+      // between the two columns, above the text: the title and the lead stay readable
+      home.x = W * (W < 1100 ? 0.6 : 0.47);
+      home.y = Math.max(128, H * 0.27);
+      shadowPx = Math.max(40, Math.min(70, H * 0.1));
+    } else {
+      // one column: the hero reserves a band above the title (site.css), the hole sits in it
+      const bar = 64;
+      const top = parseFloat(getComputedStyle(hero).paddingTop) || 200;
+      const band = Math.max(100, top - bar);
+      home.x = W * 0.5;
+      home.y = bar + band * 0.5;
+      shadowPx = Math.max(24, Math.min(52, band * 0.2, W * 0.08));
+    }
     basePx = shadowPx / (Math.sqrt(27) / 2 / 22); // apparent shadow radius = √27/2 rs at distance 22
   };
 
@@ -258,6 +269,7 @@ export function init(host) {
   const ac = new AbortController();
   const local = (e) => { const r = hero.getBoundingClientRect(); const k = r.width / W || 1; return [(e.clientX - r.left) / k, (e.clientY - r.top) / k]; };
   hero.addEventListener('pointermove', (e) => {
+    if (reduced) return; // a still picture under reduced motion
     const [x, y] = local(e);
     state.mx = x; state.my = y;
     state.pmx = x / W; state.pmy = y / H;
@@ -265,7 +277,7 @@ export function init(host) {
   hero.addEventListener('pointerleave', () => { state.mx = -9999; state.my = -9999; state.pmx = 0.5; state.pmy = 0.5; }, { signal: ac.signal });
   // press and hold on the background (not on links or buttons) feeds the hole; release sends a wave
   hero.addEventListener('pointerdown', (e) => {
-    if (e.button !== 0 || e.target.closest('a, button, input, .hero__lead, .status')) return;
+    if (reduced || e.button !== 0 || e.target.closest('a, button, input, .hero__lead, .status')) return;
     state.massTo = 1.45;
   }, { signal: ac.signal });
   const release = () => {
@@ -279,6 +291,7 @@ export function init(host) {
   const onTheme = () => {
     readPal();
     darkFrom = dark; darkTo = isDark() ? 1 : 0; darkT0 = performance.now();
+    if (reduced) { dark = darkTo; darkFrom = darkTo; still(); return; }
     state.wave = { x: state.hx, y: state.hy, t0: performance.now() };
   };
   themeHooks.push(onTheme);
@@ -322,7 +335,7 @@ export function init(host) {
     gl.uniform2f(U.uHole, state.hx, state.hy);
     gl.uniform1f(U.uPx, basePx * state.mass);
     gl.uniform1f(U.uIncl, state.incl);
-    gl.uniform1f(U.uTime, (now - t0) / 1000);
+    gl.uniform1f(U.uTime, reduced ? 14 : (now - t0) / 1000);
     gl.uniform1f(U.uDark, dark);
     gl.uniform3fv(U.uInk, pal.ink.slice(0, 3));
     gl.uniform3fv(U.uAccent, pal.accent.slice(0, 3));
@@ -333,15 +346,22 @@ export function init(host) {
     const age = state.wave.t0 < 0 ? -1 : (now - state.wave.t0) / 1000;
     gl.uniform3f(U.uWave, state.wave.x, state.wave.y, age > 4 ? -1 : age);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    if (reduced) { running = false; return; } // one frame is enough
     raf = requestAnimationFrame(frame);
   };
+  // reduced motion: draw a single settled frame (again after a resize or a theme change)
+  function still() {
+    if (!reduced || dead || !linked) return;
+    state.hx = home.x; state.hy = home.y; state.incl = 0.15; state.mass = 1; state.massV = 0;
+    update();
+  }
   const update = () => {
     const should = !dead && linked && visible && !doc.hidden && !root.classList.contains('overview');
     if (should && !running) { running = true; last = 0; raf = requestAnimationFrame(frame); }
     if (!should && running) { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
   };
   const io = new IntersectionObserver((entries) => { visible = entries[entries.length - 1].isIntersecting; update(); });
-  const ro = new ResizeObserver(() => { if (!root.classList.contains('overview')) resize(); });
+  const ro = new ResizeObserver(() => { if (!root.classList.contains('overview')) { resize(); still(); } });
   const mo = new MutationObserver(update);
   doc.addEventListener('visibilitychange', update, { signal: ac.signal });
   canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); destroy(); }, { signal: ac.signal });
