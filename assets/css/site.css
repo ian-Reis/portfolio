@@ -4,7 +4,7 @@
    that only marks relationships and actions. Every motion uses the same curve.
    ───────────────────────────────────────────────────────────── */
 
-:root {
+:root, [data-theme="light"] { /* light tokens also apply to any element set to light (theme lantern) */
   --paper: #F2F4F3;
   --surface: #FFFFFF;
   --ink: #121A22;
@@ -203,6 +203,8 @@ kbd {
   -webkit-mask-image: radial-gradient(circle 340px at var(--mx, 74%) var(--my, 42%), #000 0%, rgba(0, 0, 0, 0.35) 45%, rgba(0, 0, 0, 0.12) 80%);
   mask-image: radial-gradient(circle 340px at var(--mx, 74%) var(--my, 42%), #000 0%, rgba(0, 0, 0, 0.35) 45%, rgba(0, 0, 0, 0.12) 80%);
 }
+.hero__ink { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; animation: fade 1.6s var(--ease) both; }
+.hero__morph { position: absolute; z-index: 2; pointer-events: none; }
 .hero__grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(32px, 5vw, 80px); align-items: end; }
 .hero__title { font: 300 clamp(44px, 9.2vw, 132px)/0.94 var(--font); letter-spacing: -0.045em; }
 :lang(pt-BR) .hero__title { font-size: clamp(40px, 8.2vw, 116px); }
@@ -601,6 +603,111 @@ html.inspecting .hero + .sec { box-shadow: none; }
 .palette__key { display: flex; align-items: center; gap: 14px; padding: 9px 12px; font-size: 14.5px; color: var(--ink); }
 .palette__key span:first-child { display: inline-flex; gap: 4px; min-width: 92px; }
 .palette__item kbd + kbd { margin-left: 4px; }
+
+/* ── Theme lantern: hold the theme switch and drag a window into the other theme ── */
+#theme-toggle { touch-action: none; }
+.lantern {
+  position: fixed; inset: 0; z-index: 85; overflow: hidden; pointer-events: none;
+  background: var(--paper); color: var(--ink); clip-path: circle(0 at 50% 50%);
+}
+.lantern__stage { position: absolute; left: 0; top: 0; width: 100%; will-change: transform; }
+.lantern__ring {
+  position: fixed; left: 0; top: 0; z-index: 86; width: 300px; height: 300px; margin: -150px 0 0 -150px;
+  border-radius: 50%; border: 1.5px solid var(--accent); pointer-events: none; will-change: transform;
+  box-shadow: 0 0 0 6px var(--accent-ring);
+}
+
+/* ── Algorithm lab: index entries that run ── */
+.ix__run {
+  display: inline-grid; place-items: center; width: 22px; height: 22px; margin-left: 2px; align-self: center;
+  border: 1px solid var(--hairline-strong); border-radius: 50%; background: transparent; color: var(--accent);
+  cursor: pointer; transition: background-color 0.25s var(--ease), border-color 0.25s var(--ease), color 0.25s var(--ease), scale 0.3s var(--ease);
+}
+.ix__run svg { width: 9px; height: 9px; margin-left: 1px; }
+.ix__run:hover, .ix__item.is-running .ix__run { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+.ix__run:active { scale: 0.92; }
+.ix__item.is-running { background: var(--accent-tint); }
+.lab {
+  position: fixed; z-index: 72; width: 366px; padding: 12px 13px 14px; background: var(--surface);
+  border: 1px solid var(--hairline); border-radius: 14px; box-shadow: var(--lift); pointer-events: none;
+}
+.lab[hidden] { display: none; }
+.lab.is-pinned { pointer-events: auto; }
+.lab__head { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.lab__title { flex: 1; min-width: 0; font: 500 13.5px/1.3 var(--font); color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lab__btn {
+  display: grid; place-items: center; width: 28px; height: 28px; border: 0; border-radius: 7px; background: transparent;
+  color: var(--slate); cursor: pointer; opacity: 0; transition: opacity 0.2s var(--ease), background-color 0.2s var(--ease), color 0.2s;
+}
+.lab.is-pinned .lab__btn { opacity: 1; }
+.lab__btn:hover { background: var(--accent-tint); color: var(--ink); }
+.lab__btn svg { width: 16px; height: 16px; }
+.lab__canvas { display: block; border-radius: 8px; background: var(--paper); }
+.lab__note { min-height: 2.8em; margin-top: 10px; font: 400 13px/1.4 var(--font); color: var(--slate); }
+.lab.is-sheet { left: 16px !important; right: 16px; top: auto !important; bottom: calc(12px + env(safe-area-inset-bottom)); width: auto; display: flex; flex-direction: column; align-items: center; }
+.lab.is-sheet[hidden] { display: none; }
+.lab.is-sheet .lab__head, .lab.is-sheet .lab__note { align-self: stretch; }
+.lab.is-sheet .lab__canvas { max-width: 100%; height: auto !important; }
+
+/* ── Contribution city: a switch in the heatmap header ── */
+.seg { display: inline-flex; padding: 2px; border: 1px solid var(--hairline); border-radius: 8px; margin-left: auto; }
+.activity__head .seg { order: 3; }
+.seg__b {
+  padding: 4px 10px; border: 0; border-radius: 6px; background: transparent; color: var(--slate);
+  font: 500 12.5px/1.3 var(--font); cursor: pointer; transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+.seg__b:hover { color: var(--ink); }
+.seg__b[aria-pressed="true"] { background: var(--accent-tint); color: var(--ink); }
+.city[hidden], .hm[hidden], .hm__legend[hidden] { display: none; }
+.city { position: relative; }
+.city__canvas {
+  display: block; width: 100%; height: clamp(240px, 26vw, 340px); border-radius: 10px; cursor: grab; touch-action: none;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent-tint) 70%, var(--paper)) 0%, var(--paper) 78%);
+}
+[data-theme="dark"] .city__canvas { background: radial-gradient(120% 90% at 70% 0%, color-mix(in srgb, var(--accent) 12%, var(--paper)) 0%, var(--paper) 70%); }
+.city__canvas.is-drag { cursor: grabbing; }
+.city__hint { margin-top: 10px; font-size: 12.5px; color: var(--slate); }
+
+/* ── Overview: every section becomes an artboard on one canvas ── */
+html.overview { overflow: hidden; scrollbar-gutter: stable; }
+html.overview body {
+  background-color: color-mix(in srgb, var(--paper) 93%, var(--ink));
+  background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.2px);
+  background-size: 22px 22px; background-attachment: fixed;
+}
+html.overview main > section {
+  position: relative; z-index: 2; background-color: var(--paper); border-radius: calc(var(--ov-px, 4px) * 10);
+  clip-path: inset(0 round calc(var(--ov-px, 4px) * 10)); /* clips without changing layout (overflow would stop margin collapsing) */
+  outline: var(--ov-px, 4px) solid var(--hairline-strong); outline-offset: 0;
+  box-shadow: 0 calc(var(--ov-px, 4px) * 10) calc(var(--ov-px, 4px) * 34) rgba(0, 0, 0, 0.14);
+  transition: outline-color 0.25s var(--ease);
+}
+html.overview main > section.is-ov-hot { outline: calc(var(--ov-px, 4px) * 2) solid var(--accent); }
+html.overview .bar { transform: translateY(-110%); opacity: 0; transition: transform 0.45s var(--ease), opacity 0.3s; }
+html.overview .foot, html.overview .thread, html.overview .progress, html.overview .lab, html.overview .peek { opacity: 0; visibility: hidden; }
+html.ov-leaving body { background: var(--paper); }
+html.ov-leaving main > section {
+  box-shadow: none; outline-color: transparent; border-radius: 0; clip-path: inset(0 round 0);
+  transition: outline-color 0.3s, box-shadow 0.3s, border-radius 0.6s var(--ease), clip-path 0.6s var(--ease);
+}
+.ov { position: fixed; inset: 0; z-index: 90; }
+.ov[hidden] { display: none; }
+.ov__lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.ov__line { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linecap: round; }
+.ov__port { fill: var(--accent); transform-box: fill-box; transform-origin: center; }
+.ov__hit {
+  position: absolute; display: block; padding: 0; border: 0; border-radius: 8px; background: transparent; cursor: zoom-in;
+}
+.ov__hit:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.ov__tag {
+  position: absolute; left: 0; bottom: calc(100% + 8px); display: inline-flex; gap: 8px; align-items: baseline;
+  font: 500 13px/1.2 var(--font); color: var(--ink); white-space: nowrap;
+}
+.ov__tag b { font: 500 11px/1 var(--mono); color: var(--accent); }
+.ov__hint {
+  position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); padding: 8px 14px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--hairline); color: var(--slate); font: 400 13px/1.3 var(--font); white-space: nowrap;
+}
 
 /* ── Responsive ── */
 @media (max-width: 999px) {
