@@ -62,7 +62,15 @@ Tudo nasce de onde a pessoa agiu, num gesto só, com a mesma curva:
 Cada efeito é um módulo ES carregado sob demanda; se um falhar ou o navegador não tiver suporte, a página
 continua igual sem ele.
 
-- **Tinta no hero** (`fluid.js`, WebGL2, desktop): simulação de fluido atrás do título. As letras são
+- **Buraco negro no hero** (`blackhole.js`, WebGL2, desktop; fundo padrão): feito do zero, sem modelo nem
+  textura. Cada pixel traça um raio de luz pelo espaço-tempo de Schwarzschild; o raio pega luz ao cruzar o
+  disco de acreção (rotação kepleriana, efeito Doppler, desvio gravitacional para o vermelho) e, ao escapar,
+  cai na própria grade de pontos da página, que aparece curvada pela gravidade. Tema claro: tinta sobre papel;
+  tema escuro: disco brilhante na cor de destaque, com estrelas. O cursor inclina a vista e puxa o buraco de
+  leve; segurar o clique no fundo o alimenta (cresce) e soltar manda uma onda gravitacional pela grade.
+  Compila o shader sem travar a página e reduz a resolução sozinho se os quadros ficarem lentos.
+  Menu de comandos: "Fundo do topo: tinta" troca para a tinta (a escolha fica salva).
+- **Tinta no hero** (`fluid.js`, WebGL2, desktop; alternativa ao buraco negro): simulação de fluido atrás do título. As letras são
   sólidas, então a tinta contorna o texto; o mouse mexe, correntes lentas mantêm vivo, e a troca de tema
   derrama um anel de tinta a partir do botão. Pausa fora da tela, com a aba oculta e na visão geral.
 - **Lanterna de tema** (em `site.js`): segure o botão de tema e arraste. Um círculo mostra a página no outro
@@ -95,7 +103,7 @@ assets/css/fonts.css      → @font-face das fontes hospedadas aqui
 assets/css/site.css       → tokens dos dois temas, layout, movimento, impressão
 assets/js/i18n.js         → traduções PT, textos do painel e dos comandos
 assets/js/site.js         → todo o comportamento, em módulos isolados
-assets/js/fx/             → efeitos opcionais (tinta, título, algoritmos, cidade, visão geral)
+assets/js/fx/             → efeitos opcionais (buraco negro, tinta, título, algoritmos, cidade, visão geral)
 assets/fonts/             → Geist e Geist Mono (variáveis, subset latin, licença OFL)
 assets/images/games/      → capas dos jogos (do itch.io)
 assets/images/og.png      → imagem de compartilhamento 1200×630
@@ -151,3 +159,5 @@ Lighthouse 12, servidor local: desktop 100 / 100 / 100 / 100; mobile 92 / 100 / 
 (performance / acessibilidade / boas práticas / SEO). A nota de performance no mobile varia alguns pontos
 com a carga da máquina: nas mesmas condições, a versão anterior às animações mediu o mesmo 92. Com os
 efeitos de `fx/`: desktop 100 / 100 / 100 / 100; mobile 92 / 100 / 100 / 100 (duas medições seguidas).
+Com o buraco negro: desktop 100 / 100 / 100 / 100 (duas medições), mobile 95 / 100 / 100 / 100. Numa GPU
+integrada Intel UHD, cada quadro do buraco negro leva cerca de 6 ms (1x) e 12 ms (tela 2x).
