@@ -62,7 +62,8 @@ Tudo nasce de onde a pessoa agiu, num gesto só, com a mesma curva:
 Cada efeito é um módulo ES carregado sob demanda; se um falhar ou o navegador não tiver suporte, a página
 continua igual sem ele.
 
-- **Buraco negro no hero** (`blackhole.js`, WebGL2, desktop; fundo padrão): feito do zero, sem modelo nem
+- **Buraco negro no hero** (`blackhole.js`, WebGL2, em qualquer tela; fundo padrão; com "reduzir movimento"
+  ligado no sistema aparece como imagem parada; em telas estreitas fica numa faixa acima do título): feito do zero, sem modelo nem
   textura. Cada pixel traça um raio de luz pelo espaço-tempo de Schwarzschild; o raio pega luz ao cruzar o
   disco de acreção (rotação kepleriana, efeito Doppler, desvio gravitacional para o vermelho) e, ao escapar,
   cai na própria grade de pontos da página, que aparece curvada pela gravidade. Tema claro: tinta sobre papel;
@@ -159,5 +160,6 @@ Lighthouse 12, servidor local: desktop 100 / 100 / 100 / 100; mobile 92 / 100 / 
 (performance / acessibilidade / boas práticas / SEO). A nota de performance no mobile varia alguns pontos
 com a carga da máquina: nas mesmas condições, a versão anterior às animações mediu o mesmo 92. Com os
 efeitos de `fx/`: desktop 100 / 100 / 100 / 100; mobile 92 / 100 / 100 / 100 (duas medições seguidas).
-Com o buraco negro: desktop 100 / 100 / 100 / 100 (duas medições), mobile 95 / 100 / 100 / 100. Numa GPU
+Com o buraco negro: desktop 100 / 100 / 100 / 100; mobile (agora também com o buraco negro)
+92 / 100 / 100 / 100 em duas medições, sem deslocamento de layout (CLS 0). Numa GPU
 integrada Intel UHD, cada quadro do buraco negro leva cerca de 6 ms (1x) e 12 ms (tela 2x).
