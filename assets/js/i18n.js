@@ -89,7 +89,7 @@ window.I18N = (() => {
     'foot.print': 'Imprimir currículo',
     'palette.label': 'Menu de comandos',
     'palette.placeholder': 'Digite um comando…',
-    'palette.hint': '↑ ↓ para navegar · Enter para executar · Esc para fechar',
+    'palette.hint': '↑ ↓ para navegar · Enter para executar · Esc para fechar · ? para atalhos',
     'inspect.badge': 'Modo inspeção: grid de 12 colunas, 1200px, Esc para sair',
 
     // full index
@@ -191,6 +191,13 @@ window.I18N = (() => {
       'cmd.group.skills': 'Skill index', 'cmd.index': 'Full skill index',
       'act.total': '{n} contributions on {d} days', 'act.one': '1 contribution', 'act.many': '{n} contributions', 'act.none': 'No contributions',
       'act.aria': '{n} contributions in the last year, on {d} active days. Busiest month: {m}.',
+      'act.month': '{m}: {n} contributions',
+      'cmd.keys': 'Keyboard shortcuts',
+      'keys.palette': 'Open or close this menu',
+      'keys.slash': 'Open this menu',
+      'keys.help': 'Show these shortcuts',
+      'keys.esc': 'Close menus, clear the selected skill, leave inspect mode',
+      'keys.nav': 'Move through the menu and run a command',
     },
     pt: {
       'rel.fed': 'Recebe de', 'rel.feeds': 'Alimenta', 'rel.and': 'e',
@@ -208,6 +215,13 @@ window.I18N = (() => {
       'cmd.group.skills': 'Índice de habilidades', 'cmd.index': 'Índice completo de habilidades',
       'act.total': '{n} contribuições em {d} dias', 'act.one': '1 contribuição', 'act.many': '{n} contribuições', 'act.none': 'Nenhuma contribuição',
       'act.aria': '{n} contribuições no último ano, em {d} dias com atividade. Mês mais ativo: {m}.',
+      'act.month': '{m}: {n} contribuições',
+      'cmd.keys': 'Atalhos de teclado',
+      'keys.palette': 'Abrir ou fechar este menu',
+      'keys.slash': 'Abrir este menu',
+      'keys.help': 'Mostrar estes atalhos',
+      'keys.esc': 'Fechar menus, limpar a habilidade selecionada, sair do modo inspeção',
+      'keys.nav': 'Navegar pelo menu e executar um comando',
     },
   };
 
