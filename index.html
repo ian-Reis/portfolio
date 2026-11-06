@@ -3,275 +3,401 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ian Reis — Game Developer &amp; Software Developer</title>
-<meta name="description" content="Ian Reis builds gameplay systems, multiplayer, and tools that ship — across Godot 4, Unreal C++, and Roblox.">
-<meta property="og:title" content="Ian Reis — Game Developer &amp; Software Developer">
-<meta property="og:description" content="Gameplay systems, multiplayer, and tools that ship — Godot 4, Unreal C++, Roblox.">
+<title>Ian Reis — Software Engineer</title>
+<meta name="description" content="Ian Reis is a software engineer who builds management systems, point-of-sale software, RESTful APIs, data analysis, BI and dashboards. Also makes games with Godot and Roblox.">
+<meta name="theme-color" content="#F2F4F3">
+<meta name="color-scheme" content="light dark">
+<link rel="canonical" href="https://ian-reis.github.io/portfolio/">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23242b38'/%3E%3Ctext x='14' y='42' font-family='monospace' font-size='30' fill='%2361e0a5'%3E%3E_%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script data-goatcounter="https://ian-reis.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-<style>
-  body { margin: 0; box-sizing: border-box; background: oklch(15% 0.015 250); }
-  * { box-sizing: border-box; }
-  a { color: oklch(80% 0.17 150); text-decoration: none; }
-  a:hover { color: oklch(88% 0.15 150); }
-  ::selection { background: oklch(80% 0.17 150 / 0.3); }
-  @keyframes blink { 0%, 45% { opacity: 1; } 50%, 95% { opacity: 0; } 100% { opacity: 1; } }
-  .project-shot {
-    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-    text-align: center; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
-    line-height: 1.5; color: oklch(55% 0.02 250);
-    background: repeating-linear-gradient(135deg, oklch(23% 0.018 250) 0px, oklch(23% 0.018 250) 12px, oklch(20% 0.016 250) 12px, oklch(20% 0.016 250) 24px);
-  }
-  @media (max-width: 900px) {
-    .hero-grid { grid-template-columns: 1fr !important; }
-    .cards-grid { grid-template-columns: 1fr !important; }
-    .stack-grid { grid-template-columns: 1fr !important; }
-    nav .nav-links a:not(.cta) { display: none !important; }
-  }
-</style>
+<meta property="og:url" content="https://ian-reis.github.io/portfolio/">
+<meta property="og:title" content="Ian Reis — Software Engineer">
+<meta property="og:description" content="Management systems, RESTful APIs, data analysis, BI and dashboards. Also games with Godot and Roblox.">
+<meta property="og:image" content="https://ian-reis.github.io/portfolio/assets/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23121A22'/%3E%3Cpath d='M18 32L46 20M18 32L46 44' stroke='%237FB5B0' stroke-width='3' fill='none'/%3E%3Ccircle cx='18' cy='32' r='6' fill='%23F2F4F3'/%3E%3Ccircle cx='46' cy='20' r='6' fill='%23F2F4F3'/%3E%3Ccircle cx='46' cy='44' r='6' fill='%23F2F4F3'/%3E%3C/svg%3E">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Ian Reis",
+  "jobTitle": "Software Engineer",
+  "email": "mailto:erickian2007@gmail.com",
+  "url": "https://ian-reis.github.io/portfolio/",
+  "sameAs": ["https://github.com/ian-Reis", "https://ian-reis.itch.io/"]
+}
+</script>
+
+<script>
+  /* Runs before first paint: theme, language and motion preferences, so nothing flashes. */
+  (function () {
+    var r = document.documentElement;
+    var get = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+    var theme = get('ir:theme');
+    if (theme !== 'light' && theme !== 'dark') {
+      theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    r.setAttribute('data-theme', theme);
+    var lang = get('ir:lang');
+    if (lang !== 'en' && lang !== 'pt') lang = /^pt\b/i.test(navigator.language || '') ? 'pt' : 'en';
+    r.lang = lang === 'pt' ? 'pt-BR' : 'en';
+    try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) r.classList.add('motion'); } catch (e) {}
+    setTimeout(function () { if (!window.__siteReady) r.classList.remove('motion'); }, 3000); // fail-safe
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#0E1418' : '#F2F4F3');
+  })();
+</script>
+
+<link rel="preload" href="assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/fonts.css">
+<link rel="stylesheet" href="assets/css/site.css">
+
+<script data-goatcounter="https://ian-reis.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
 
-<div style="font-family: 'Inter', sans-serif; background: oklch(15% 0.015 250); color: oklch(93% 0.01 250); min-height: 100vh; width: 100%;">
+<a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+<div class="progress" aria-hidden="true"><span id="progress"></span></div>
 
-  <nav style="position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 18px 48px; background: oklch(15% 0.015 250 / 0.85); backdrop-filter: blur(8px); border-bottom: 1px solid oklch(30% 0.02 250 / 0.5);">
-    <div style="font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 17px; color: oklch(93% 0.01 250);">ian<span style="color: oklch(80% 0.17 150);">.reis</span>()</div>
-    <div class="nav-links" style="display: flex; align-items: center; gap: 28px;">
-      <a href="#projects" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: oklch(68% 0.015 250);">projects</a>
-      <a href="#specialization" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: oklch(68% 0.015 250);">specialization</a>
-      <a href="#stack" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: oklch(68% 0.015 250);">stack</a>
-      <a href="#contact" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: oklch(68% 0.015 250);">contact</a>
-      <a class="cta" href="https://www.fiverr.com/s/ljaD8gj" target="_blank" rel="noopener" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: oklch(15% 0.015 250); background: oklch(80% 0.17 150); padding: 9px 18px; border-radius: 4px;">Hire on Fiverr</a>
+<header class="bar" id="bar" data-c="Header">
+  <div class="wrap bar__in">
+    <a class="brand" href="#top">Ian Reis</a>
+    <nav class="nav" aria-label="Sections" data-i18n-attr="aria-label:nav.label">
+      <a href="#skills" data-i18n="nav.skills">Skills</a>
+      <a href="#work" data-i18n="nav.work">Work</a>
+      <a href="#games" data-i18n="nav.games">Games</a>
+      <a href="#contact" data-i18n="nav.contact">Contact</a>
+      <span class="nav__ind" aria-hidden="true"></span>
+    </nav>
+    <div class="tools">
+      <button class="tool tool--palette" type="button" id="open-palette" aria-haspopup="dialog" aria-controls="palette" aria-label="Open command menu" data-i18n-attr="aria-label:palette.open">
+        <svg class="icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span class="tool__keys"><kbd class="mod-key">Ctrl</kbd><kbd>K</kbd></span>
+      </button>
+      <button class="tool tool--lang" type="button" id="lang-toggle">PT</button>
+      <button class="theme-switch" type="button" id="theme-toggle" role="switch" aria-checked="false" aria-label="Dark theme" data-i18n-attr="aria-label:theme.label">
+        <span class="theme-switch__track"><span class="theme-switch__port"></span></span>
+      </button>
+      <a class="btn btn--primary btn--sm" href="https://github.com/ian-Reis" target="_blank" rel="noopener">
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
     </div>
-  </nav>
+  </div>
+</header>
 
-  <section class="hero-grid" style="padding: 100px 48px 80px; max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 64px; align-items: center;">
-    <div>
-      <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: oklch(80% 0.17 150); margin-bottom: 18px;">$ whoami --roles game-dev,software-dev</div>
-      <h1 style="font-size: 56px; line-height: 1.05; font-weight: 800; margin: 0 0 20px; letter-spacing: -0.02em;">Ian Reis</h1>
-      <p style="font-size: 19px; line-height: 1.6; color: oklch(80% 0.012 250); max-width: 520px; margin: 0 0 32px;">I build gameplay systems, multiplayer, and tools that ship — across <strong style="color: oklch(93% 0.01 250);">Godot 4</strong>, <strong style="color: oklch(93% 0.01 250);">Unreal C++</strong>, and <strong style="color: oklch(93% 0.01 250);">Roblox</strong>. Clean architecture, documented code, deadlines respected.</p>
-      <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
-        <a href="https://www.fiverr.com/s/ljaD8gj" target="_blank" rel="noopener" style="font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 15px; color: oklch(15% 0.015 250); background: oklch(80% 0.17 150); padding: 14px 26px; border-radius: 6px;">Hire me on Fiverr &rarr;</a>
-        <a href="https://ian-reis.itch.io/" target="_blank" rel="noopener" style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: oklch(68% 0.015 250); padding: 14px 6px;">itch.io</a>
-        <a href="https://github.com/ian-Reis" target="_blank" rel="noopener" style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: oklch(68% 0.015 250); padding: 14px 6px;">GitHub</a>
-      </div>
-    </div>
-    <div style="background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250); border-radius: 10px; overflow: hidden; box-shadow: 0 20px 60px oklch(10% 0.02 250 / 0.5);">
-      <div style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: oklch(23% 0.017 250); border-bottom: 1px solid oklch(30% 0.02 250);">
-        <div style="width: 11px; height: 11px; border-radius: 50%; background: oklch(65% 0.15 25);"></div>
-        <div style="width: 11px; height: 11px; border-radius: 50%; background: oklch(80% 0.14 90);"></div>
-        <div style="width: 11px; height: 11px; border-radius: 50%; background: oklch(78% 0.16 150);"></div>
-        <div style="margin-left: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: oklch(65% 0.015 250);">developer.gd</div>
-      </div>
-      <div style="padding: 24px 26px; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.9; color: oklch(80% 0.012 250);">
-        <div><span style="color: oklch(70% 0.16 300);">class_name</span> <span style="color: oklch(78% 0.16 150);">Developer</span></div>
-        <div style="margin-top: 10px;"><span style="color: oklch(70% 0.16 300);">var</span> role <span style="color: oklch(65% 0.015 250);">:=</span> <span style="color: oklch(80% 0.14 90);">"Game Developer &amp; Software Developer"</span></div>
-        <div><span style="color: oklch(70% 0.16 300);">var</span> engines <span style="color: oklch(65% 0.015 250);">:=</span> [<span style="color: oklch(80% 0.14 90);">"Godot 4"</span>, <span style="color: oklch(80% 0.14 90);">"Unreal C++"</span>, <span style="color: oklch(80% 0.14 90);">"Roblox"</span>]</div>
-        <div><span style="color: oklch(70% 0.16 300);">var</span> focus <span style="color: oklch(65% 0.015 250);">:=</span> <span style="color: oklch(80% 0.14 90);">"systems, multiplayer, tools"</span></div>
-        <div style="margin-top: 10px; color: oklch(50% 0.015 250);">// available for freelance work<span style="display: inline-block; width: 8px; height: 15px; background: oklch(78% 0.16 150); margin-left: 6px; vertical-align: middle; animation: blink 1.1s step-end infinite;"></span></div>
+<main id="main">
+
+  <!-- ───────────── Hero ───────────── -->
+  <section class="hero" id="top" data-c="Hero">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="wrap hero__grid">
+      <h1 class="hero__title">
+        <span class="sr" data-i18n="hero.sr">Ian Reis, software engineer.</span>
+        <span class="hero__line" aria-hidden="true"><span class="hero__inner" data-split data-i18n="hero.l1">Software</span></span>
+        <span class="hero__line" aria-hidden="true"><span class="hero__inner" data-split data-i18n="hero.l2">engineer.</span></span>
+      </h1>
+      <div class="hero__side">
+        <p class="status"><span class="status__dot" aria-hidden="true"></span><span data-i18n="status">Open for commissions and services</span></p>
+        <p class="hero__lead" data-i18n="hero.lead">I'm Ian Reis. I build management systems, point-of-sale software and RESTful APIs, and turn their data into analysis, BI and dashboards. I also make games in Godot and Roblox.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="https://github.com/ian-Reis" target="_blank" rel="noopener">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            <span data-i18n="cta.github">View my GitHub</span>
+          </a>
+          <a class="link" href="mailto:erickian2007@gmail.com" data-i18n="cta.email">Email me</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <section id="projects" style="padding: 80px 48px; max-width: 1180px; margin: 0 auto;">
-    <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: oklch(80% 0.17 150); margin-bottom: 10px;">// featured work</div>
-    <h2 style="font-size: 34px; font-weight: 800; margin: 0 0 40px; letter-spacing: -0.01em;">Featured Projects</h2>
-    <div class="cards-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;">
+  <!-- ───────────── Skills ───────────── -->
+  <section class="sec" id="skills" aria-labelledby="skills-title" data-c="Skills">
+    <div class="wrap">
+      <header class="sec__head">
+        <h2 class="sec__title" id="skills-title" data-i18n="skills.title">Skills</h2>
+        <p class="sec__note" data-i18n="skills.note">Select a skill to see what it connects to and what it covers.</p>
+      </header>
 
-      <div style="background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column;">
-        <div style="width: 100%; height: 190px;">
-          <div class="project-shot">Cozy Kart<br>gameplay screenshot</div>
-        </div>
-        <div style="padding: 22px; display: flex; flex-direction: column; gap: 12px; flex: 1;">
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: oklch(78% 0.16 150); background: oklch(78% 0.16 150 / 0.12); border: 1px solid oklch(78% 0.16 150 / 0.3); padding: 3px 9px; border-radius: 4px;">Godot 4</span>
-            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: oklch(78% 0.15 260); background: oklch(78% 0.15 260 / 0.12); border: 1px solid oklch(78% 0.15 260 / 0.3); padding: 3px 9px; border-radius: 4px;">C#</span>
+      <div class="map" data-c="SkillMap">
+        <div class="map__row" data-row="main">
+          <div class="map__labels">
+            <h3 class="map__label" data-i18n="map.main">Business systems and data</h3>
+            <p class="map__legend" aria-hidden="true"><span class="map__legend-line"></span><span data-i18n="map.legend">Lines show what feeds what</span></p>
           </div>
-          <h3 style="margin: 0; font-size: 19px; font-weight: 700;">Cozy Kart</h3>
-          <p style="margin: 0; font-size: 14.5px; line-height: 1.6; color: oklch(70% 0.012 250);">A cozy kart racer with drift-based handling, item pickups, and split-screen multiplayer built in Godot 4.</p>
-          <a href="#" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; margin-top: auto; padding-top: 6px;">View project &rarr;</a>
-        </div>
-      </div>
-
-      <div style="background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column;">
-        <div style="width: 100%; height: 190px;">
-          <div class="project-shot">RPG Framework<br>editor/gameplay screenshot</div>
-        </div>
-        <div style="padding: 22px; display: flex; flex-direction: column; gap: 12px; flex: 1;">
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: oklch(78% 0.16 150); background: oklch(78% 0.16 150 / 0.12); border: 1px solid oklch(78% 0.16 150 / 0.3); padding: 3px 9px; border-radius: 4px;">Godot 4</span>
-            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: oklch(78% 0.15 260); background: oklch(78% 0.15 260 / 0.12); border: 1px solid oklch(78% 0.15 260 / 0.3); padding: 3px 9px; border-radius: 4px;">C#</span>
+          <div class="map__grid">
+            <ul class="col">
+              <li><button class="node" type="button" data-id="api" data-to="data" data-stage="0" aria-pressed="false" aria-controls="panel">
+                <span class="node__name" data-i18n="n.api">RESTful APIs</span>
+                <span class="node__desc" data-i18n="n.api.d">Services that connect systems</span>
+              </button></li>
+              <li><button class="node" type="button" data-id="mgmt" data-to="data" data-stage="0" aria-pressed="false" aria-controls="panel">
+                <span class="node__name" data-i18n="n.mgmt">Management systems</span>
+                <span class="node__desc" data-i18n="n.mgmt.d">Software that runs day-to-day operations</span>
+              </button></li>
+              <li><button class="node" type="button" data-id="pdv" data-to="data" data-stage="0" aria-pressed="false" aria-controls="panel">
+                <span class="node__name" data-i18n="n.pdv">Point of sale (PDV)</span>
+                <span class="node__desc" data-i18n="n.pdv.d">Software for the sales counter</span>
+              </button></li>
+            </ul>
+            <ul class="col">
+              <li><button class="node" type="button" data-id="data" data-to="bi" data-stage="1" aria-pressed="false" aria-controls="panel">
+                <span class="node__name" data-i18n="n.data">Data analysis</span>
+                <span class="node__desc" data-i18n="n.data.d">Python, from raw data to answers</span>
+              </button></li>
+            </ul>
+            <ul class="col">
+              <li><button class="node" type="button" data-id="bi" data-to="dash" data-stage="2" aria-pressed="false" aria-controls="panel">
+                <span class="node__name" data-i18n="n.bi">Business intelligence</span>
+                <span class="node__desc" data-i18n="n.bi.d">Turning data into decisions</span>
+              </button></li>
+            </ul>
+            <ul class="col">
+              <li><button class="node" type="button" data-id="dash" data-stage="3" aria-pressed="false" aria-controls="panel">
+                <span class="node__name" data-i18n="n.dash">Dashboards</span>
+                <span class="node__desc" data-i18n="n.dash.d">Metrics you can read at a glance</span>
+              </button></li>
+            </ul>
           </div>
-          <h3 style="margin: 0; font-size: 19px; font-weight: 700;">RPG Framework</h3>
-          <p style="margin: 0; font-size: 14.5px; line-height: 1.6; color: oklch(70% 0.012 250);">A modular C# framework for turn-based RPGs — inventory, stats, dialogue, and save systems, reusable across projects.</p>
-          <a href="#" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; margin-top: auto; padding-top: 6px;">View project &rarr;</a>
         </div>
-      </div>
 
-      <div style="background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column;">
-        <div style="width: 100%; height: 190px;">
-          <div class="project-shot">Roblox Game<br>gameplay screenshot</div>
-        </div>
-        <div style="padding: 22px; display: flex; flex-direction: column; gap: 12px; flex: 1;">
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: oklch(78% 0.16 150); background: oklch(78% 0.16 150 / 0.12); border: 1px solid oklch(78% 0.16 150 / 0.3); padding: 3px 9px; border-radius: 4px;">Roblox Studio</span>
-            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: oklch(78% 0.15 260); background: oklch(78% 0.15 260 / 0.12); border: 1px solid oklch(78% 0.15 260 / 0.3); padding: 3px 9px; border-radius: 4px;">Luau</span>
+        <div class="map__row map__row--games" data-row="games">
+          <div class="map__labels">
+            <h3 class="map__label" data-i18n="map.games">Games, on the side</h3>
           </div>
-          <h3 style="margin: 0; font-size: 19px; font-weight: 700;">Roblox Game</h3>
-          <p style="margin: 0; font-size: 14.5px; line-height: 1.6; color: oklch(70% 0.012 250);">A multiplayer Roblox experience with server-authoritative gameplay, custom UI, and monetization hooks.</p>
-          <a href="#" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; margin-top: auto; padding-top: 6px;">View project &rarr;</a>
+          <div class="map__grid">
+            <ul class="col">
+              <li><button class="node" type="button" data-id="csharp" data-to="godot" data-stage="0" aria-pressed="false" aria-controls="panel">
+                <span class="node__name">C#</span>
+                <span class="node__desc" data-i18n="n.csharp.d">Gameplay code and tools</span>
+              </button></li>
+              <li><button class="node" type="button" data-id="luau" data-to="roblox" data-stage="0" aria-pressed="false" aria-controls="panel">
+                <span class="node__name">Luau</span>
+                <span class="node__desc" data-i18n="n.luau.d">Roblox scripting</span>
+              </button></li>
+            </ul>
+            <ul class="col">
+              <li><button class="node" type="button" data-id="godot" data-to="game" data-stage="1" aria-pressed="false" aria-controls="panel">
+                <span class="node__name">Godot</span>
+                <span class="node__desc" data-i18n="n.godot.d">Open-source game engine</span>
+              </button></li>
+              <li><button class="node" type="button" data-id="roblox" data-to="game" data-stage="1" aria-pressed="false" aria-controls="panel">
+                <span class="node__name">Roblox</span>
+                <span class="node__desc" data-i18n="n.roblox.d">Experiences in Luau</span>
+              </button></li>
+            </ul>
+            <ul class="col">
+              <li><button class="node" type="button" data-id="game" data-stage="2" aria-pressed="false" aria-controls="panel">
+                <span class="node__name" data-i18n="n.game">Game development</span>
+                <span class="node__desc" data-i18n="n.game.d">Prototypes, gameplay and tools</span>
+              </button></li>
+            </ul>
+            <div class="col col--empty" aria-hidden="true"></div>
+          </div>
         </div>
-      </div>
 
-    </div>
-  </section>
-
-  <section id="specialization" style="padding: 80px 48px; max-width: 1180px; margin: 0 auto;">
-    <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: oklch(80% 0.17 150); margin-bottom: 10px;">// what I do</div>
-    <h2 style="font-size: 34px; font-weight: 800; margin: 0 0 40px; letter-spacing: -0.01em;">Technical Specialization</h2>
-    <div class="cards-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;">
-
-      <div style="background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250); border-radius: 10px; padding: 24px;">
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: oklch(78% 0.16 150); margin-bottom: 10px;">gameplaySystems()</div>
-        <h3 style="margin: 0 0 8px; font-size: 17px; font-weight: 700;">Gameplay &amp; Systems Programming</h3>
-        <p style="margin: 0; font-size: 14px; line-height: 1.6; color: oklch(68% 0.012 250);">Combat, inventory, state machines, save/load — architected to extend without breaking.</p>
-      </div>
-
-      <div style="background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250); border-radius: 10px; padding: 24px;">
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: oklch(78% 0.16 150); margin-bottom: 10px;">multiplayer()</div>
-        <h3 style="margin: 0 0 8px; font-size: 17px; font-weight: 700;">Multiplayer &amp; Networking</h3>
-        <p style="margin: 0; font-size: 14px; line-height: 1.6; color: oklch(68% 0.012 250);">Client-server architecture, replication, matchmaking — from co-op to server-authoritative competitive.</p>
-      </div>
-
-      <div style="background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250); border-radius: 10px; padding: 24px;">
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: oklch(78% 0.16 150); margin-bottom: 10px;">editorTools()</div>
-        <h3 style="margin: 0 0 8px; font-size: 17px; font-weight: 700;">Editor Tools &amp; Pipelines</h3>
-        <p style="margin: 0; font-size: 14px; line-height: 1.6; color: oklch(68% 0.012 250);">Custom Godot plugins, Unreal editor utilities, and build pipelines that speed up production.</p>
-      </div>
-
-      <div style="background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250); border-radius: 10px; padding: 24px;">
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: oklch(78% 0.16 150); margin-bottom: 10px;">performance()</div>
-        <h3 style="margin: 0 0 8px; font-size: 17px; font-weight: 700;">Performance &amp; Optimization</h3>
-        <p style="margin: 0; font-size: 14px; line-height: 1.6; color: oklch(68% 0.012 250);">Profiling, memory management, draw-call reduction — built to hit target framerates on mobile and desktop.</p>
-      </div>
-
-      <div style="background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250); border-radius: 10px; padding: 24px;">
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: oklch(78% 0.16 150); margin-bottom: 10px;">aiBehavior()</div>
-        <h3 style="margin: 0 0 8px; font-size: 17px; font-weight: 700;">AI &amp; Behavior Systems</h3>
-        <p style="margin: 0; font-size: 14px; line-height: 1.6; color: oklch(68% 0.012 250);">Behavior trees, finite state machines, and pathfinding for NPCs that feel intentional.</p>
-      </div>
-
-      <div style="background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250); border-radius: 10px; padding: 24px;">
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: oklch(78% 0.16 150); margin-bottom: 10px;">utilities()</div>
-        <h3 style="margin: 0 0 8px; font-size: 17px; font-weight: 700;">Apps &amp; Utilities</h3>
-        <p style="margin: 0; font-size: 14px; line-height: 1.6; color: oklch(68% 0.012 250);">Cross-platform desktop tools built with Godot — outside of games, for real workflows.</p>
-      </div>
-
-    </div>
-  </section>
-
-  <section id="stack" style="padding: 80px 48px; max-width: 1180px; margin: 0 auto;">
-    <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: oklch(80% 0.17 150); margin-bottom: 10px;">// toolbox</div>
-    <h2 style="font-size: 34px; font-weight: 800; margin: 0 0 40px; letter-spacing: -0.01em;">Stack</h2>
-    <div class="stack-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;">
-      <div>
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: oklch(65% 0.015 250); margin-bottom: 14px; letter-spacing: 0.05em; text-transform: uppercase;">Engines</div>
-        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 13.5px; padding: 8px 14px; border-radius: 6px; background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250);">Godot 4</span>
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 13.5px; padding: 8px 14px; border-radius: 6px; background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250);">Unreal Engine 5</span>
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 13.5px; padding: 8px 14px; border-radius: 6px; background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250);">Roblox Studio</span>
-        </div>
-      </div>
-      <div>
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: oklch(65% 0.015 250); margin-bottom: 14px; letter-spacing: 0.05em; text-transform: uppercase;">Languages</div>
-        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 13.5px; padding: 8px 14px; border-radius: 6px; background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250);">GDScript</span>
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 13.5px; padding: 8px 14px; border-radius: 6px; background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250);">C#</span>
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 13.5px; padding: 8px 14px; border-radius: 6px; background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250);">C++</span>
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 13.5px; padding: 8px 14px; border-radius: 6px; background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250);">Luau</span>
-        </div>
-      </div>
-      <div>
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: oklch(65% 0.015 250); margin-bottom: 14px; letter-spacing: 0.05em; text-transform: uppercase;">Tools</div>
-        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 13.5px; padding: 8px 14px; border-radius: 6px; background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250);">Git</span>
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 13.5px; padding: 8px 14px; border-radius: 6px; background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250);">Rider</span>
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 13.5px; padding: 8px 14px; border-radius: 6px; background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250);">Blender</span>
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 13.5px; padding: 8px 14px; border-radius: 6px; background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250);">Perforce</span>
-        </div>
+        <!-- detail for the selected skill (filled by site.js) -->
+        <section class="panel" id="panel" aria-labelledby="panel-title" aria-hidden="true">
+          <div class="panel__inner">
+            <div class="panel__body">
+              <header class="panel__head">
+                <h3 class="panel__title" id="panel-title" tabindex="-1"></h3>
+                <button class="panel__close" type="button" aria-label="Close" data-i18n-attr="aria-label:panel.close">
+                  <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                </button>
+              </header>
+              <p class="panel__lede"></p>
+              <div class="panel__cols">
+                <div class="panel__group" data-group="links">
+                  <h4 class="panel__label" data-i18n="panel.work">Public work</h4>
+                  <ul class="panel__links"></ul>
+                </div>
+                <div class="panel__group" data-group="related">
+                  <h4 class="panel__label" data-i18n="panel.related">Connected skills</h4>
+                  <ul class="panel__chips"></ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   </section>
 
-  <section id="contact" style="padding: 100px 48px 120px; max-width: 1180px; margin: 0 auto;">
-    <div style="background: oklch(20% 0.016 250); border: 1px solid oklch(30% 0.02 250); border-radius: 14px; padding: 64px 56px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 22px;">
-      <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: oklch(80% 0.17 150);">$ contact --available true</div>
-      <h2 style="font-size: 36px; font-weight: 800; margin: 0; letter-spacing: -0.01em;">Let's build something.</h2>
-      <p style="margin: 0; font-size: 16px; color: oklch(70% 0.012 250); max-width: 480px; line-height: 1.6;">Open for freelance work on gameplay systems, multiplayer, and tools — in Godot 4, Unreal C++, or Roblox.</p>
-      <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
-        <a href="https://www.fiverr.com/s/ljaD8gj" target="_blank" rel="noopener" style="font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 15px; color: oklch(15% 0.015 250); background: oklch(80% 0.17 150); padding: 14px 28px; border-radius: 6px;">Message me on Fiverr &rarr;</a>
-        <a href="https://ian-reis.itch.io/" target="_blank" rel="noopener" style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: oklch(68% 0.015 250);">itch.io</a>
-        <a href="https://github.com/ian-Reis" target="_blank" rel="noopener" style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: oklch(68% 0.015 250);">GitHub</a>
-        <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: oklch(68% 0.015 250);">Discord: ian.reis_</span>
+  <!-- ───────────── Work ───────────── -->
+  <section class="sec" id="work" aria-labelledby="work-title" data-c="Work">
+    <div class="wrap">
+      <header class="sec__head">
+        <h2 class="sec__title" id="work-title" data-i18n="work.title">Work</h2>
+        <p class="sec__note" data-i18n-html="work.note">Public repositories on <a href="https://github.com/ian-Reis?tab=repositories" target="_blank" rel="noopener">GitHub</a>.</p>
+      </header>
+
+      <!-- live from the GitHub API; stays hidden if it cannot load -->
+      <div class="insights" id="insights" hidden data-c="Insights">
+        <figure class="insight">
+          <figcaption class="insight__label" data-i18n="work.langs">Languages across public repositories</figcaption>
+          <div class="langbar" id="langbar"></div>
+          <ul class="langbar__legend" id="langlegend"></ul>
+        </figure>
+        <figure class="insight">
+          <figcaption class="insight__label" data-i18n="work.timeline">Last push of each repository</figcaption>
+          <div class="timeline" id="timeline"></div>
+        </figure>
       </div>
+
+      <ul class="repos" id="repos" data-c="RepoList">
+        <li class="repo" data-repo="agentic-flow">
+          <a class="repo__main" href="https://github.com/ian-Reis/agentic-flow" target="_blank" rel="noopener">
+            <span class="repo__name">agentic-flow</span>
+            <span class="repo__desc" data-i18n="r.agentic">A Claude Code plugin that sets up a file-based multi-agent workflow. One agent plans, others execute from a queue and prove their work with reports.</span>
+          </a>
+          <span class="repo__meta"><span class="repo__lang">Python</span><span class="repo__when"></span></span>
+        </li>
+        <li class="repo" data-repo="IAN-SEC">
+          <a class="repo__main" href="https://github.com/ian-Reis/IAN-SEC" target="_blank" rel="noopener">
+            <span class="repo__name">IAN-SEC</span>
+            <span class="repo__desc" data-i18n="r.iansec">A personal password vault that runs offline in the terminal. No server, no cloud.</span>
+          </a>
+          <span class="repo__meta"><span class="repo__lang">Python</span><span class="repo__when"></span></span>
+        </li>
+        <li class="repo" data-repo="Chapterbind">
+          <a class="repo__main" href="https://github.com/ian-Reis/Chapterbind" target="_blank" rel="noopener">
+            <span class="repo__name">Chapterbind</span>
+            <span class="repo__desc" data-i18n="r.chapterbind">Merges per-chapter novel or manga files into one correctly ordered PDF, EPUB or CBZ.</span>
+          </a>
+          <span class="repo__meta"><span class="repo__lang">Python</span><span class="repo__when"></span></span>
+        </li>
+        <li class="repo" data-repo="FastAPI-RESTful-Learning">
+          <a class="repo__main" href="https://github.com/ian-Reis/FastAPI-RESTful-Learning" target="_blank" rel="noopener">
+            <span class="repo__name">FastAPI-RESTful-Learning</span>
+            <span class="repo__desc" data-i18n="r.fastapi">A FastAPI project for learning RESTful API design.</span>
+          </a>
+          <span class="repo__meta"><span class="repo__lang">Python</span><span class="repo__when"></span></span>
+        </li>
+        <li class="repo" data-repo="TodoApi">
+          <a class="repo__main" href="https://github.com/ian-Reis/TodoApi" target="_blank" rel="noopener">
+            <span class="repo__name">TodoApi</span>
+            <span class="repo__desc" data-i18n="r.todo">A to-do list web API built with C#.</span>
+          </a>
+          <span class="repo__meta"><span class="repo__lang">C#</span><span class="repo__when"></span></span>
+        </li>
+        <li class="repo" data-repo="Book-Loan-ASP.NET">
+          <a class="repo__main" href="https://github.com/ian-Reis/Book-Loan-ASP.NET" target="_blank" rel="noopener">
+            <span class="repo__name">Book-Loan-ASP.NET</span>
+            <span class="repo__desc" data-i18n="r.bookloan">A book loan app built with ASP.NET Core MVC.</span>
+          </a>
+          <span class="repo__meta"><span class="repo__lang">C#</span><span class="repo__when"></span></span>
+        </li>
+      </ul>
+
+      <p class="more"><a class="link" href="https://github.com/ian-Reis?tab=repositories" target="_blank" rel="noopener" data-i18n="work.all">See every repository on GitHub</a></p>
     </div>
-    <div style="text-align: center; margin-top: 40px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: oklch(45% 0.015 250);">&copy; 2026 Ian Reis — game developer &amp; software developer</div>
   </section>
 
+  <!-- ───────────── Games ───────────── -->
+  <section class="sec" id="games" aria-labelledby="games-title" data-c="Games">
+    <div class="wrap">
+      <header class="sec__head">
+        <h2 class="sec__title" id="games-title" data-i18n="games.title">Games</h2>
+        <p class="sec__note" data-i18n-html="games.note">Made with Godot and published on <a href="https://ian-reis.itch.io/" target="_blank" rel="noopener">itch.io</a>.</p>
+      </header>
+
+      <ul class="repos repos--games" id="games-list">
+        <li class="repo" data-cover="assets/images/games/cozy-kart.png">
+          <a class="repo__main" href="https://ian-reis.itch.io/cozy-kart" target="_blank" rel="noopener">
+            <span class="repo__name">Cozy Kart</span>
+            <span class="repo__desc" data-i18n="g.cozy">A racing prototype. Plays in the browser.</span>
+          </a>
+          <span class="repo__meta"><span class="repo__lang">Godot</span><span class="repo__when" data-i18n="g.prototype">Prototype</span></span>
+        </li>
+        <li class="repo" data-cover="assets/images/games/gobot.png">
+          <a class="repo__main" href="https://ian-reis.itch.io/gobot" target="_blank" rel="noopener">
+            <span class="repo__name">Gobot</span>
+            <span class="repo__desc" data-i18n="g.gobot">A 3D platformer. Plays in the browser.</span>
+          </a>
+          <span class="repo__meta"><span class="repo__lang">Godot</span><span class="repo__when" data-i18n="g.released">Released</span></span>
+        </li>
+        <li class="repo" data-cover="assets/images/games/tsundoku.png">
+          <a class="repo__main" href="https://ian-reis.itch.io/tsundoku" target="_blank" rel="noopener">
+            <span class="repo__name">Tsundoku <span lang="ja">積ん読</span></span>
+            <span class="repo__desc" data-i18n="g.tsundoku">A downloader and reader for manga, web comics and novels.</span>
+          </a>
+          <span class="repo__meta"><span class="repo__lang">Godot</span><span class="repo__when" data-i18n="g.indev">In development</span></span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ───────────── Contact ───────────── -->
+  <section class="sec sec--last" id="contact" aria-labelledby="contact-title" data-c="Contact">
+    <div class="wrap">
+      <header class="sec__head">
+        <h2 class="sec__title" id="contact-title" data-i18n="contact.title">Contact</h2>
+        <p class="sec__note" data-i18n="status.full">Open for commissions and services.</p>
+      </header>
+
+      <div class="contact">
+        <p class="contact__lead" data-i18n="contact.lead">Email is the fastest way to reach me. My code is on GitHub.</p>
+        <div class="contact__actions">
+          <a class="btn btn--primary" href="https://github.com/ian-Reis" target="_blank" rel="noopener">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            <span data-i18n="cta.github">View my GitHub</span>
+          </a>
+          <div class="email">
+            <a class="btn btn--ghost email__link" href="mailto:erickian2007@gmail.com">erickian2007@gmail.com</a>
+            <button class="btn btn--ghost email__copy" type="button" data-copy-email aria-label="Copy email address" data-i18n-attr="aria-label:copy.label">
+              <svg class="icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M13 7V5a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+              <span data-i18n="copy.short">Copy</span>
+            </button>
+          </div>
+        </div>
+        <ul class="contact__more">
+          <li>Discord: ian.reis_</li>
+          <li><a class="link" href="https://ian-reis.itch.io/" target="_blank" rel="noopener">itch.io</a></li>
+          <li><a class="link" href="https://www.fiverr.com/s/ljaD8gj" target="_blank" rel="noopener" data-i18n="contact.fiverr">Freelance on Fiverr</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot" data-c="Footer">
+  <div class="wrap foot__in">
+    <span>&copy; 2026 Ian Reis</span>
+    <span class="foot__tools">
+      <button class="foot__btn" type="button" data-open-palette><span data-i18n="foot.palette">Commands</span> <kbd class="mod-key">Ctrl</kbd><kbd>K</kbd></button>
+      <button class="foot__btn" type="button" data-inspect aria-pressed="false" data-i18n="foot.inspect">Inspect layout</button>
+      <button class="foot__btn" type="button" data-print data-i18n="foot.print">Print résumé</button>
+    </span>
+  </div>
+</footer>
+
+<!-- command menu -->
+<div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="Command menu" data-i18n-attr="aria-label:palette.label" hidden>
+  <div class="palette__scrim" data-close-palette></div>
+  <div class="palette__box">
+    <div class="palette__search">
+      <svg class="icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input class="palette__input" id="palette-input" type="text" role="combobox" aria-expanded="true" aria-controls="palette-list" aria-autocomplete="list" autocomplete="off" spellcheck="false" placeholder="Type a command…" data-i18n-attr="placeholder:palette.placeholder">
+      <kbd>Esc</kbd>
+    </div>
+    <ul class="palette__list" id="palette-list" role="listbox"></ul>
+    <p class="palette__hint" data-i18n="palette.hint">↑ ↓ to move · Enter to run · Esc to close</p>
+  </div>
 </div>
 
-<canvas id="matrix-trail" style="position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999;"></canvas>
-<script>
-(() => {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+<!-- shared floating preview (commit / game cover), toast, inspect overlay -->
+<div class="peek" id="peek" aria-hidden="true"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="inspect" id="inspect" aria-hidden="true">
+  <div class="wrap inspect__grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <p class="inspect__badge"><span data-i18n="inspect.badge">Inspect mode: 12-column grid, 1200px, Esc to exit</span></p>
+</div>
 
-  const canvas = document.getElementById('matrix-trail');
-  const ctx = canvas.getContext('2d');
-  const chars = 'アイウエオカキクケコサシスセソタチツテト0123456789{}<>/;=$#*+-_[]'.split('');
-  let particles = [];
-  let lastSpawn = 0;
-
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  window.addEventListener('mousemove', (e) => {
-    const now = performance.now();
-    if (now - lastSpawn < 30) return;
-    lastSpawn = now;
-    if (particles.length > 140) particles.splice(0, particles.length - 140);
-    particles.push({
-      x: e.clientX + (Math.random() - 0.5) * 14,
-      y: e.clientY + (Math.random() - 0.5) * 14,
-      char: chars[Math.floor(Math.random() * chars.length)],
-      life: 1,
-      vy: 0.6 + Math.random() * 0.8,
-      size: 12 + Math.random() * 6
-    });
-  });
-
-  function tick() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach((p) => {
-      p.y += p.vy;
-      p.life -= 0.02;
-      ctx.font = `${p.size}px 'JetBrains Mono', monospace`;
-      ctx.fillStyle = `oklch(80% 0.17 150 / ${Math.max(p.life, 0)})`;
-      ctx.fillText(p.char, p.x, p.y);
-    });
-    particles = particles.filter((p) => p.life > 0);
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-})();
-</script>
-
+<script src="assets/js/i18n.js"></script>
+<script defer src="assets/js/site.js"></script>
 </body>
 </html>
