@@ -100,14 +100,14 @@
     const fav = $('link[rel="icon"]');
     // the tab icon follows the theme too: ink tile on light, paper tile on dark
     const icon = (tile, line, dot) => `data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='${tile}'/><path d='M18 32L46 20M18 32L46 44' stroke='${line}' stroke-width='3' fill='none'/><circle cx='18' cy='32' r='6' fill='${dot}'/><circle cx='46' cy='20' r='6' fill='${dot}'/><circle cx='46' cy='44' r='6' fill='${dot}'/></svg>`)}`;
-    const ICON_LIGHT = icon('#121A22', '#7FB5B0', '#F2F4F3');
-    const ICON_DARK = icon('#E4EBE9', '#1B5E5A', '#0E1418');
+    const ICON_LIGHT = icon('#15130F', '#F2A04A', '#F2F2F0');
+    const ICON_DARK = icon('#EFE8DC', '#A84B0C', '#07080B');
     const current = () => (root.dataset.theme === 'dark' ? 'dark' : 'light');
     const sync = () => {
       const dark = current() === 'dark';
       btn.setAttribute('aria-checked', String(dark));
       btn.title = t(dark ? 'theme.toLight' : 'theme.toDark');
-      if (meta) meta.setAttribute('content', dark ? '#0E1418' : '#F2F4F3');
+      if (meta) meta.setAttribute('content', dark ? '#07080B' : '#F2F2F0');
       if (fav) fav.setAttribute('href', dark ? ICON_DARK : ICON_LIGHT);
     };
     // opts: { x, y } to start the circle from a point, fromRadius to continue a circle that is already open,
@@ -269,10 +269,14 @@
   safe('header', () => {
     const bar = $('#bar');
     const prog = $('#progress');
+    const heroEl = $('.hero');
     let queued = false;
     const frame = () => {
       queued = false;
       const y = window.scrollY;
+      // the hero is always space: while the header floats over it, the header is dark too
+      const overHero = !!heroEl && y < heroEl.offsetTop + heroEl.offsetHeight - bar.offsetHeight;
+      if (overHero) bar.dataset.theme = 'dark'; else bar.removeAttribute('data-theme');
       bar.classList.toggle('is-solid', y > 8);
       bar.classList.toggle('is-compact', y > 160);
       const max = root.scrollHeight - window.innerHeight;

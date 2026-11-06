@@ -6,7 +6,7 @@
 <title>Ian Reis — Software Engineer</title>
 <meta name="description" content="Ian Reis is a freelance software engineer: software architecture, RESTful APIs, management and point-of-sale systems, Python automation and data analysis. Also builds games with Godot and Roblox. Portuguese and English.">
 <meta name="keywords" content="software engineer, software architecture, RESTful APIs, FastAPI, Python, automation, N8N, CQRS, DDD, Clean Architecture, Godot 4, Roblox, Luau, multiplayer, freelancer">
-<meta name="theme-color" content="#F2F4F3">
+<meta name="theme-color" content="#F2F2F0">
 <meta name="color-scheme" content="light dark">
 <link rel="canonical" href="https://ian-reis.github.io/portfolio/">
 <meta property="og:type" content="website">
@@ -17,7 +17,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23121A22'/%3E%3Cpath d='M18 32L46 20M18 32L46 44' stroke='%237FB5B0' stroke-width='3' fill='none'/%3E%3Ccircle cx='18' cy='32' r='6' fill='%23F2F4F3'/%3E%3Ccircle cx='46' cy='20' r='6' fill='%23F2F4F3'/%3E%3Ccircle cx='46' cy='44' r='6' fill='%23F2F4F3'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2315130F'/%3E%3Cpath d='M18 32L46 20M18 32L46 44' stroke='%23F2A04A' stroke-width='3' fill='none'/%3E%3Ccircle cx='18' cy='32' r='6' fill='%23F2F2F0'/%3E%3Ccircle cx='46' cy='20' r='6' fill='%23F2F2F0'/%3E%3Ccircle cx='46' cy='44' r='6' fill='%23F2F2F0'/%3E%3C/svg%3E">
 
 <script type="application/ld+json">
 {
@@ -50,7 +50,7 @@
     r.classList.add('scripted'); // before first paint: layout that depends on JavaScript can be reserved without a shift
     setTimeout(function () { if (!window.__siteReady) r.classList.remove('motion'); }, 3000); // fail-safe
     var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', theme === 'dark' ? '#0E1418' : '#F2F4F3');
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#07080B' : '#F2F2F0');
 
     // arriving from the 404 page: open this page as a circle from the button that was clicked
     window.addEventListener('pagereveal', function (e) {
@@ -79,7 +79,7 @@
 <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
 <div class="progress" aria-hidden="true"><span id="progress"></span></div>
 
-<header class="bar" id="bar" data-c="Header">
+<header class="bar" id="bar" data-c="Header" data-theme="dark">
   <div class="wrap bar__in">
     <a class="brand" href="#top" aria-label="Ian Reis"><span class="brand__k" aria-hidden="true">I</span><span class="brand__h" aria-hidden="true">an&nbsp;</span><span class="brand__k" aria-hidden="true">R</span><span class="brand__h" aria-hidden="true">eis</span></a>
     <nav class="nav" aria-label="Sections" data-i18n-attr="aria-label:nav.label">
@@ -109,7 +109,7 @@
 <main id="main">
 
   <!-- ───────────── Hero ───────────── -->
-  <section class="hero" id="top" data-c="Hero">
+  <section class="hero" id="top" data-c="Hero" data-theme="dark"><!-- always space: the black hole needs the dark -->
     <div class="hero__bg" aria-hidden="true"></div>
     <div class="wrap hero__grid">
       <h1 class="hero__title">

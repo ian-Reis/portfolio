@@ -62,15 +62,24 @@ Tudo nasce de onde a pessoa agiu, num gesto só, com a mesma curva:
 Cada efeito é um módulo ES carregado sob demanda; se um falhar ou o navegador não tiver suporte, a página
 continua igual sem ele.
 
-- **Buraco negro no hero** (`blackhole.js`, WebGL2, em qualquer tela; fundo padrão; com "reduzir movimento"
-  ligado no sistema aparece como imagem parada; em telas estreitas fica numa faixa acima do título): feito do zero, sem modelo nem
-  textura. Cada pixel traça um raio de luz pelo espaço-tempo de Schwarzschild; o raio pega luz ao cruzar o
-  disco de acreção (rotação kepleriana, efeito Doppler, desvio gravitacional para o vermelho) e, ao escapar,
-  cai na própria grade de pontos da página, que aparece curvada pela gravidade. Tema claro: tinta sobre papel;
-  tema escuro: disco brilhante na cor de destaque, com estrelas. O cursor inclina a vista e puxa o buraco de
-  leve; segurar o clique no fundo o alimenta (cresce) e soltar manda uma onda gravitacional pela grade.
-  Compila o shader sem travar a página e reduz a resolução sozinho se os quadros ficarem lentos.
-  Menu de comandos: "Fundo do topo: tinta" troca para a tinta (a escolha fica salva).
+- **Buraco negro no hero** (`blackhole.js`, WebGL2, em qualquer tela; fundo padrão): feito do zero, sem
+  modelo nem textura. O hero é uma janela para o espaço nos dois temas (tela cheia, sempre escuro; o
+  cabeçalho fica escuro enquanto está sobre ele). Cada pixel traça um raio de luz pelo espaço-tempo de
+  Schwarzschild; ao cruzar o disco de acreção pega luz com cor de temperatura (vermelho, laranja, dourado,
+  branco), deslocada pelo efeito Doppler (o lado que vem na sua direção fica mais branco) e pelo desvio
+  gravitacional; ao escapar cai num céu de poeira, estrelas e uma espiral de matéria caindo, tudo curvado
+  pela lente. O disco é visto um pouco de cima (cerca de 17°), para mostrar o anel.
+  - **Nascimento:** ao abrir a página o buraco se forma e solta uma onda gravitacional que passa pelo céu
+    e pelas letras do título.
+  - **Clique:** lança uma estrela no disco; ela orbita, é rasgada em arco pelas forças de maré e cai
+    em espiral até brilhar no anel de fótons.
+  - **Segurar:** alimenta o buraco; ele cresce e esquenta e puxa as letras do título e o texto ao lado
+    (espaguetificação). Ao soltar, voltam com mola, sai uma onda e jatos relativísticos disparam dos polos.
+  - **Rolagem:** a câmera cai em direção ao buraco enquanto o hero sai da tela.
+  - **Cursor:** inclina a vista e funciona como uma lente pequena sobre as estrelas.
+  Sem GPU (renderização por software) ou com "reduzir movimento" ligado no sistema, aparece uma imagem
+  parada. Compila o shader sem travar a página e baixa a resolução sozinho se os quadros ficarem lentos.
+  Menu de comandos (desktop): "Fundo do topo: tinta" troca para a tinta (a escolha fica salva).
 - **Tinta no hero** (`fluid.js`, WebGL2, desktop; alternativa ao buraco negro): simulação de fluido atrás do título. As letras são
   sólidas, então a tinta contorna o texto; o mouse mexe, correntes lentas mantêm vivo, e a troca de tema
   derrama um anel de tinta a partir do botão. Pausa fora da tela, com a aba oculta e na visão geral.
@@ -160,6 +169,7 @@ Lighthouse 12, servidor local: desktop 100 / 100 / 100 / 100; mobile 92 / 100 / 
 (performance / acessibilidade / boas práticas / SEO). A nota de performance no mobile varia alguns pontos
 com a carga da máquina: nas mesmas condições, a versão anterior às animações mediu o mesmo 92. Com os
 efeitos de `fx/`: desktop 100 / 100 / 100 / 100; mobile 92 / 100 / 100 / 100 (duas medições seguidas).
-Com o buraco negro: desktop 100 / 100 / 100 / 100; mobile (agora também com o buraco negro)
-92 / 100 / 100 / 100 em duas medições, sem deslocamento de layout (CLS 0). Numa GPU
-integrada Intel UHD, cada quadro do buraco negro leva cerca de 6 ms (1x) e 12 ms (tela 2x).
+Com o buraco negro grande e a paleta nova: desktop 99–100 / 100 / 100 / 100; mobile 92 / 100 / 100 / 100
+em três medições seguidas, sem deslocamento de layout (CLS 0). Numa GPU
+integrada Intel UHD, cada quadro do buraco negro em tela cheia leva cerca de 18 ms no desktop (a resolução
+se ajusta sozinha) e 6 ms num celular de 390 px.

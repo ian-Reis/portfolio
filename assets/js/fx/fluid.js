@@ -286,9 +286,10 @@ export function init(host) {
   let colB = [0, 0, 0];
   let alpha = 0.3;
   const readColors = () => {
-    colA = rgb(cssVar('--accent'));
-    colB = rgb(cssVar('--slate'));
-    alpha = doc.documentElement.dataset.theme === 'dark' ? 0.4 : 0.3;
+    // the hero is always dark (space), so read its own tokens
+    colA = rgb(cssVar('--accent', hero));
+    colB = rgb(cssVar('--slate', hero));
+    alpha = 0.42;
   };
   readColors();
 

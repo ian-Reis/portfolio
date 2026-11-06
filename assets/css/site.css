@@ -1,26 +1,27 @@
 /* ─────────────────────────────────────────────────────────────
    Ian Reis — software engineer
-   Calm and precise. One type family, hairlines instead of shadows, one accent
-   that only marks relationships and actions. Every motion uses the same curve.
+   Precise, with one strong image: a black hole in the hero. The palette comes from it:
+   deep space and the amber of its accretion disk. One type family, hairlines instead
+   of shadows, one accent that only marks relationships and actions.
    ───────────────────────────────────────────────────────────── */
 
 :root, [data-theme="light"] { /* light tokens also apply to any element set to light (theme lantern) */
-  --paper: #F2F4F3;
+  --paper: #F2F2F0;
   --surface: #FFFFFF;
-  --ink: #121A22;
-  --slate: #586671;
-  --hairline: #D5DCDF;
-  --hairline-strong: #B7C3C8;
-  --port: #8FA0A8;
-  --accent: #1B5E5A;
-  --accent-tint: #E3EEED;
-  --accent-ring: rgba(27, 94, 90, 0.14);
-  --btn-bg: #121A22;
-  --btn-fg: #F2F4F3;
-  --dot: rgba(18, 26, 34, 0.22);
-  --scrim: rgba(18, 26, 34, 0.32);
-  --lift: 0 18px 50px rgba(18, 26, 34, 0.12);
-  --c1: #1B5E5A; --c2: #3F8C85; --c3: #7FB5B0; --c4: #8FA0A8; --c5: #C3CFD3;
+  --ink: #15130F;
+  --slate: #615B52;
+  --hairline: #DDD9D2;
+  --hairline-strong: #C2BCB2;
+  --port: #A1998D;
+  --accent: #A84B0C;
+  --accent-tint: #F6E8DC;
+  --accent-ring: rgba(168, 75, 12, 0.14);
+  --btn-bg: #15130F;
+  --btn-fg: #F2F2F0;
+  --dot: rgba(21, 19, 15, 0.2);
+  --scrim: rgba(21, 19, 15, 0.32);
+  --lift: 0 18px 50px rgba(21, 19, 15, 0.12);
+  --c1: #A84B0C; --c2: #D9782E; --c3: #E9B36A; --c4: #A1998D; --c5: #D3CDC3;
 
   --font: 'Geist', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
@@ -31,23 +32,23 @@
   color-scheme: light;
 }
 
-[data-theme="dark"] {
-  --paper: #0E1418;
-  --surface: #141C21;
-  --ink: #E4EBE9;
-  --slate: #93A3AB;
-  --hairline: #243139;
-  --hairline-strong: #34444E;
-  --port: #5B6C75;
-  --accent: #5FB3AA;
-  --accent-tint: rgba(95, 179, 170, 0.12);
-  --accent-ring: rgba(95, 179, 170, 0.18);
-  --btn-bg: #E4EBE9;
-  --btn-fg: #0E1418;
-  --dot: rgba(228, 235, 233, 0.2);
-  --scrim: rgba(5, 9, 11, 0.6);
-  --lift: 0 18px 50px rgba(0, 0, 0, 0.45);
-  --c1: #5FB3AA; --c2: #3F8C85; --c3: #2B5F5B; --c4: #7C93A0; --c5: #46565F;
+[data-theme="dark"] { /* deep space, lit by the accretion disk */
+  --paper: #07080B;
+  --surface: #0F1116;
+  --ink: #EFE8DC;
+  --slate: #A39C90;
+  --hairline: #1F2129;
+  --hairline-strong: #2F323B;
+  --port: #6E685E;
+  --accent: #F2A04A;
+  --accent-tint: rgba(242, 160, 74, 0.12);
+  --accent-ring: rgba(242, 160, 74, 0.2);
+  --btn-bg: #EFE8DC;
+  --btn-fg: #07080B;
+  --dot: rgba(239, 232, 220, 0.16);
+  --scrim: rgba(2, 2, 4, 0.65);
+  --lift: 0 18px 50px rgba(0, 0, 0, 0.6);
+  --c1: #F2A04A; --c2: #E0703A; --c3: #F6D28B; --c4: #A39C90; --c5: #4A453E;
   color-scheme: dark;
 }
 
@@ -150,7 +151,7 @@ kbd {
 
 /* ── Header ── */
 .bar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50; color: var(--ink); /* follows its own tokens (dark over the hero) */
   border-bottom: 1px solid transparent; transition: background-color 0.3s, border-color 0.3s;
 }
 .bar.is-solid {
@@ -192,10 +193,21 @@ kbd {
   transition: transform 0.5s var(--ease), background-color 0.3s, border-color 0.3s;
 }
 .theme-switch:hover .theme-switch__track { border-color: var(--accent); }
-[data-theme="dark"] .theme-switch__port { transform: translateX(20px); background: var(--accent); border-color: var(--accent); }
+html[data-theme="dark"] .theme-switch__port { transform: translateX(20px); background: var(--accent); border-color: var(--accent); }
 
 /* ── Hero ── */
-.hero { position: relative; overflow: hidden; padding: calc(var(--bar-h) + clamp(48px, 9vw, 128px)) 0 clamp(56px, 8vw, 104px); }
+/* the hero is a window into space in both themes (data-theme="dark" on the section): full screen,
+   the black hole above, the words anchored at the bottom */
+.hero {
+  position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end;
+  min-height: 100vh; min-height: 100svh; padding: calc(var(--bar-h) + 48px) 0 clamp(48px, 7vw, 96px);
+  background: var(--paper); color: var(--ink);
+}
+/* a dark floor under the words so they stay readable over the light of the disk */
+.hero::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 58%; z-index: 0; pointer-events: none;
+  background: linear-gradient(to top, var(--paper) 8%, color-mix(in srgb, var(--paper) 70%, transparent) 45%, transparent);
+}
 .hero__bg {
   position: absolute; inset: 0; z-index: 0; pointer-events: none;
   background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.6px);
@@ -206,8 +218,21 @@ kbd {
 .hero__ink { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; animation: fade 1.6s var(--ease) both; }
 .hero__bg { transition: opacity 1.2s var(--ease); }
 .hero.has-hole .hero__bg { opacity: 0; } /* the black hole draws the dot grid itself, bent by its gravity */
+/* letters can be pulled and stretched by the black hole (transforms need inline-block; pre keeps the spaces) */
+.hero__title .ch { display: inline-block; white-space: pre; will-change: auto; }
+.hero.is-free .hero__line { overflow: visible; }
+.hole__hint {
+  position: absolute; left: 50%; top: calc(var(--bar-h) + 14px); z-index: 1; width: max-content; max-width: 90vw; translate: -50% 0;
+  font: 400 12.5px/1.4 var(--mono); color: var(--slate); letter-spacing: 0.01em; pointer-events: none;
+  opacity: 0; transition: opacity 0.8s var(--ease);
+}
+.hole__hint.is-on { opacity: 0.85; }
+@media (max-width: 600px) { .hole__hint { max-width: calc(100vw - 48px); font-size: 11px; text-align: center; white-space: normal; } }
+.hero.has-hole { cursor: crosshair; }
+.hero.has-hole a, .hero.has-hole button, .hero.has-hole .hero__lead, .hero.has-hole .status { cursor: auto; }
+.hero.has-hole a, .hero.has-hole button { cursor: pointer; }
 .hero__morph { position: absolute; z-index: 2; pointer-events: none; }
-.hero__grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(32px, 5vw, 80px); align-items: end; }
+.hero__grid { position: relative; z-index: 1; width: 100%; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(32px, 5vw, 80px); align-items: end; }
 .hero__title { font: 300 clamp(44px, 9.2vw, 132px)/0.94 var(--font); letter-spacing: -0.045em; }
 :lang(pt-BR) .hero__title { font-size: clamp(40px, 8.2vw, 116px); }
 .hero__line { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em; }
@@ -666,7 +691,7 @@ html.inspecting .hero + .sec { box-shadow: none; }
   display: block; width: 100%; height: clamp(240px, 26vw, 340px); border-radius: 10px; cursor: grab; touch-action: none;
   background: linear-gradient(180deg, color-mix(in srgb, var(--accent-tint) 70%, var(--paper)) 0%, var(--paper) 78%);
 }
-[data-theme="dark"] .city__canvas { background: radial-gradient(120% 90% at 70% 0%, color-mix(in srgb, var(--accent) 12%, var(--paper)) 0%, var(--paper) 70%); }
+html[data-theme="dark"] .city__canvas { background: radial-gradient(120% 90% at 70% 0%, color-mix(in srgb, var(--accent) 12%, var(--paper)) 0%, var(--paper) 70%); }
 .city__canvas.is-drag { cursor: grabbing; }
 .city__hint { margin-top: 10px; font-size: 12.5px; color: var(--slate); }
 
@@ -709,11 +734,6 @@ html.ov-leaving main > section {
 .ov__hint {
   position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); padding: 8px 14px; border-radius: 999px;
   background: var(--surface); border: 1px solid var(--hairline); color: var(--slate); font: 400 13px/1.3 var(--font); white-space: nowrap;
-}
-
-/* one-column hero: a band above the title where the black hole sits (reserved up front, so nothing shifts) */
-@media screen and (max-width: 999px) {
-  .scripted .hero { padding-top: calc(var(--bar-h) + clamp(150px, 30vw, 230px)); }
 }
 
 /* ── Responsive ── */
@@ -770,14 +790,15 @@ html.ov-leaving main > section {
 /* ── Print: the page becomes a one-page résumé ── */
 @media print {
   :root, [data-theme="dark"] {
-    --paper: #fff; --surface: #fff; --ink: #111; --slate: #444; --hairline: #ccc; --hairline-strong: #999; --accent: #1B5E5A;
+    --paper: #fff; --surface: #fff; --ink: #111; --slate: #444; --hairline: #ccc; --hairline-strong: #999; --accent: #A84B0C;
     color-scheme: light;
   }
   @page { margin: 14mm 16mm; }
   body { font-size: 10.5pt; line-height: 1.45; background: #fff; }
   .bar, .progress, .hero__bg, .map__edges, .panel, .insights, .activity, .palette, .peek, .toast, .inspect, .thread, .ripple,
   .foot__tools, .skip, .more, .status__dot, .email__copy, .map__legend, .contact__actions .btn--primary .icon { display: none !important; }
-  .hero { padding: 0 0 10pt; overflow: visible; }
+  .hero { display: block; min-height: 0; padding: 0 0 10pt; overflow: visible; background: none; }
+  .hero::after, .hero canvas { display: none !important; }
   .hero__grid { display: block; }
   .hero__title { font-size: 26pt; font-weight: 400 !important; animation: none !important; }
   .hero__line { display: inline; overflow: visible; padding: 0; margin: 0; }
