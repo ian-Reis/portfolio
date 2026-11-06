@@ -420,7 +420,7 @@ kbd {
 .hm__legend span:last-child { margin-left: 6px; }
 
 /* ── Work: live insights ── */
-.insights { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 5vw, 64px); margin-bottom: clamp(32px, 4vw, 48px); }
+.insights { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(28px, 5vw, 64px); margin-bottom: clamp(32px, 4vw, 48px); }
 .insights[hidden] { display: none; }
 .insight { margin: 0; }
 .insight__label { margin-bottom: 14px; font-size: 14px; color: var(--slate); }
@@ -431,20 +431,6 @@ kbd {
 .langbar__legend li { display: inline-flex; align-items: center; gap: 8px; }
 .langbar__legend i { width: 8px; height: 8px; border-radius: 2px; }
 .langbar__legend b { font-weight: 500; color: var(--ink); }
-
-.timeline { position: relative; height: 84px; }
-.timeline__axis { position: absolute; left: 0; right: 0; top: 54px; height: 1px; background: var(--hairline-strong); transform-origin: left; transition: transform 1.2s var(--ease); }
-.timeline__tick { position: absolute; top: 50px; width: 1px; height: 9px; background: var(--hairline-strong); }
-.timeline__year { position: absolute; top: 64px; transform: translateX(-50%); font: 400 12px var(--mono); color: var(--slate); }
-.timeline__dot {
-  position: absolute; width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%;
-  background: var(--surface); border: 1.5px solid var(--accent); cursor: pointer;
-  transition: transform 0.5s var(--ease), opacity 0.5s var(--ease), background-color 0.2s;
-  transition-delay: calc(var(--i, 0) * 45ms), calc(var(--i, 0) * 45ms), 0s;
-}
-.timeline__dot:hover { background: var(--accent); transform: scale(1.35); transition-delay: 0s; }
-.js.motion .insight:not(.is-in) .timeline__axis { transform: scaleX(0); }
-.js.motion .insight:not(.is-in) .timeline__dot { opacity: 0; transform: translateY(10px) scale(0.6); }
 
 /* ── Repositories and games ── */
 .repos { border-top: 1px solid var(--hairline); }
@@ -598,13 +584,13 @@ html.inspecting .hero + .sec { box-shadow: none; }
 .hm__months span { transition: color 0.25s; }
 .hm__months span.is-on { color: var(--ink); }
 .activity__total { font-variant-numeric: tabular-nums; }
-.is-loading .hm__grid, .is-loading .langbar, .is-loading .timeline { position: relative; overflow: hidden; }
-.is-loading .hm__grid::after, .is-loading .langbar::after, .is-loading .timeline::after {
+.is-loading .hm__grid, .is-loading .langbar { position: relative; overflow: hidden; }
+.is-loading .hm__grid::after, .is-loading .langbar::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--accent) 14%, transparent) 50%, transparent 100%);
   transform: translateX(-100%);
 }
-.motion .is-loading .hm__grid::after, .motion .is-loading .langbar::after, .motion .is-loading .timeline::after { animation: shimmer 1.3s var(--ease) infinite; }
+.motion .is-loading .hm__grid::after, .motion .is-loading .langbar::after { animation: shimmer 1.3s var(--ease) infinite; }
 @keyframes shimmer { to { transform: translateX(100%); } }
 .langbar .sk { flex: 1; background: var(--hairline); border-radius: 3px; }
 .activity__total:empty::before, .is-loading .activity__total::before { content: "\2014"; color: var(--slate); }
