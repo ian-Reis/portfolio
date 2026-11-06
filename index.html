@@ -50,6 +50,20 @@
     setTimeout(function () { if (!window.__siteReady) r.classList.remove('motion'); }, 3000); // fail-safe
     var meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', theme === 'dark' ? '#0E1418' : '#F2F4F3');
+
+    // arriving from the 404 page: open this page as a circle from the button that was clicked
+    window.addEventListener('pagereveal', function (e) {
+      if (!e.viewTransition) return;
+      var raw = null;
+      try { raw = sessionStorage.getItem('ir:vt-origin'); sessionStorage.removeItem('ir:vt-origin'); } catch (err) {}
+      if (!raw) { e.viewTransition.skipTransition(); return; }
+      var p = JSON.parse(raw);
+      e.viewTransition.ready.then(function () {
+        var rad = Math.hypot(Math.max(p.x, innerWidth - p.x), Math.max(p.y, innerHeight - p.y));
+        r.animate({ clipPath: ['circle(0px at ' + p.x + 'px ' + p.y + 'px)', 'circle(' + rad + 'px at ' + p.x + 'px ' + p.y + 'px)'] },
+          { duration: 700, easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)', pseudoElement: '::view-transition-new(root)' });
+      });
+    });
   })();
 </script>
 
@@ -66,7 +80,7 @@
 
 <header class="bar" id="bar" data-c="Header">
   <div class="wrap bar__in">
-    <a class="brand" href="#top">Ian Reis</a>
+    <a class="brand" href="#top" aria-label="Ian Reis"><span class="brand__k" aria-hidden="true">I</span><span class="brand__h" aria-hidden="true">an&nbsp;</span><span class="brand__k" aria-hidden="true">R</span><span class="brand__h" aria-hidden="true">eis</span></a>
     <nav class="nav" aria-label="Sections" data-i18n-attr="aria-label:nav.label">
       <a href="#skills" data-i18n="nav.skills">Skills</a>
       <a href="#work" data-i18n="nav.work">Work</a>
@@ -582,7 +596,7 @@
       <kbd>Esc</kbd>
     </div>
     <ul class="palette__list" id="palette-list" role="listbox"></ul>
-    <p class="palette__hint" data-i18n="palette.hint">↑ ↓ to move · Enter to run · Esc to close</p>
+    <p class="palette__hint" data-i18n="palette.hint">↑ ↓ to move · Enter to run · Esc to close · ? for shortcuts</p>
   </div>
 </div>
 
@@ -590,6 +604,7 @@
 <div class="peek" id="peek" aria-hidden="true"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="inspect" id="inspect" aria-hidden="true">
+  <i class="inspect__scan"></i>
   <div class="wrap inspect__grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
   <p class="inspect__badge"><span data-i18n="inspect.badge">Inspect mode: 12-column grid, 1200px, Esc to exit</span></p>
 </div>
