@@ -1602,7 +1602,33 @@
     near('#index', 'algos.js'); // canvas 2D, works everywhere (reduced motion steps through without animating)
     if (desktop) load('overview.js');
     if (gl2 && !reduced) {
-      if (desktop) load('fluid.js');
+      // hero background: the black hole by default, the ink as the alternative (command menu), remembered
+      if (desktop) {
+        let kind = 'hole';
+        try { if (localStorage.getItem('ir:bg') === 'ink') kind = 'ink'; } catch (e) { /* private mode */ }
+        let handle = null;
+        let token = 0;
+        const start = (next) => {
+          const mine = (token += 1);
+          if (handle) { handle.destroy(); handle = null; }
+          kind = next;
+          import(`./fx/${next === 'ink' ? 'fluid.js' : 'blackhole.js'}`)
+            .then((m) => { const h = m.init(host); if (mine === token) handle = h || null; else if (h) h.destroy(); })
+            .catch((err) => { if (window.console) console.warn('[fx/hero]', err); });
+        };
+        start(kind);
+        (api.commands = api.commands || []).push(() => ({
+          g: 'do', id: 'bg', label: t(kind === 'ink' ? 'cmd.bgHole' : 'cmd.bgInk'),
+          kw: 'background fundo black hole buraco negro ink tinta fluid fluido hero',
+          run: () => {
+            const next = kind === 'ink' ? 'hole' : 'ink';
+            try { localStorage.setItem('ir:bg', next); } catch (e) { /* private mode */ }
+            start(next);
+            const top = $('#top');
+            if (top && top.getBoundingClientRect().bottom < 80) top.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+          },
+        }));
+      }
       if (desktop) near('#work', 'city.js');
       // the title morph: right away on desktop; on phones only once the language button is touched
       const langBtn = $('#lang-toggle');
