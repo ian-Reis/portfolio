@@ -1,0 +1,52 @@
+# Refreshes assets/data/activity.json (the contribution heatmap on the site) once a day.
+# Reads the public contribution calendar, which already includes private contributions as daily
+# totals because "Include private contributions on my profile" is on. No personal token needed.
+name: Update contribution activity
+
+on:
+  schedule:
+    - cron: '17 6 * * *' # every day at 06:17 UTC
+  workflow_dispatch: {}  # "Run workflow" button in the Actions tab
+
+permissions:
+  contents: write # commit the refreshed JSON
+  pages: write    # ask GitHub Pages to republish
+
+concurrency:
+  group: activity
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fetch contribution calendar
+        run: node scripts/fetch-activity.mjs
+
+      - name: Commit if the data changed
+        id: commit
+        run: |
+          if git diff --quiet -- assets/data/activity.json; then
+            echo "No change in activity."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/data/activity.json
+          git commit -m "Update contribution activity"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # pushes made with GITHUB_TOKEN do not trigger the Pages deployment by themselves
+      - name: Republish GitHub Pages
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method POST "repos/${{ github.repository }}/pages/builds" || echo "Pages build request failed; the next push will publish the data."
