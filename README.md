@@ -23,6 +23,12 @@ Publicado em <https://ian-reis.github.io/portfolio/>.
 - **Work.** Lista curada de repositórios. Do GitHub vêm, ao vivo: data do último push, barra de
   linguagens, linha do tempo com o último push de cada repositório e, ao passar o mouse, a última
   mensagem de commit.
+- **Heatmap de contribuições** (inclui repositórios privados). Vem de `assets/data/activity.json`, que a
+  Action `.github/workflows/activity.yml` atualiza todo dia lendo o calendário público do seu perfil
+  (com "Include private contributions on my profile" ativo, ele já soma os privados como totais por
+  dia; nenhum nome, código ou mensagem de commit privado é exposto, e nenhum token é necessário). Para
+  atualizar na hora: aba **Actions → Update contribution activity → Run workflow**, ou localmente
+  `node scripts/fetch-activity.mjs`.
 - **Games.** Os três jogos do itch.io; ao passar o mouse aparece a capa.
 - **Menu de comandos** (Ctrl K, ⌘ K ou `/`): navegar, trocar tema e idioma, copiar e-mail, modo
   inspeção, imprimir currículo, abrir GitHub e itch.io.
@@ -47,6 +53,9 @@ assets/js/site.js         → todo o comportamento, em módulos isolados
 assets/fonts/             → Geist e Geist Mono (variáveis, subset latin, licença OFL)
 assets/images/games/      → capas dos jogos (do itch.io)
 assets/images/og.png      → imagem de compartilhamento 1200×630
+assets/data/activity.json → contribuições por dia (gerado; não editar à mão)
+scripts/fetch-activity.mjs → gera o activity.json a partir do calendário do GitHub
+.github/workflows/activity.yml → roda o script todo dia e republica o site
 ```
 
 ## Rodar localmente
